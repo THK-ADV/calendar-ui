@@ -1,16 +1,6 @@
 import { derived, writable, type Readable, type Writable } from 'svelte/store'
-import type { ChoiceOption, ScheduleEvent } from './types'
-import { scheduleEventToFullCalendarEvent } from './utils'
-
-type GlobalFilter = {
-  lehreinheitFilter?: ChoiceOption,
-  studyProgramFilter?: ChoiceOption,
-  poFilter?: ChoiceOption,
-  semesterFilter?: ChoiceOption,
-  moduleFilter?: ChoiceOption,
-  dozentenFilter?: ChoiceOption,
-  roomFilter?: ChoiceOption,
-}
+import type { ChoiceOption, GlobalFilter, ScheduleEvent } from './types'
+import { filterScheduleEvents, scheduleEventToFullCalendarEvent } from './utils'
 
 // Events from data sources
 export const scheduleEvents: Writable<Array<ScheduleEvent>> = writable([])
@@ -54,14 +44,6 @@ export const filters: Readable<GlobalFilter> = derived(
 )
 
 export const events = derived([scheduleEvents, filters], ([$scheduleEvents, $filters]) => {
-  return $scheduleEvents.filter((event: ScheduleEvent) => {
-    // ToDo: Include further filters in filter logic
-    // Mein Kopf schafft das heute nicht mehr. Wenn du magst @Alex ... :)
-    const usesModuleFilter = $filters.moduleFilter?.value != undefined;
-    const matchesModuleFilter = event.module.id === $filters.moduleFilter?.value
-    if($filters.moduleFilter) console.log(event.module.id, $filters.moduleFilter)
-    if(usesModuleFilter && matchesModuleFilter) return true;
-    if(!usesModuleFilter) return true;
-    return false;
-  }).map(scheduleEventToFullCalendarEvent)
+  const filteredScheduleEvents = filterScheduleEvents($scheduleEvents, $filters).map(scheduleEventToFullCalendarEvent);
+  return filteredScheduleEvents
 })

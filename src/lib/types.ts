@@ -5,6 +5,16 @@ export type ChoiceOption = {
   value: string,
 }
 
+export type GlobalFilter = {
+  lehreinheitFilter?: ChoiceOption,
+  studyProgramFilter?: ChoiceOption,
+  poFilter?: ChoiceOption,
+  semesterFilter?: ChoiceOption,
+  moduleFilter?: ChoiceOption,
+  dozentenFilter?: ChoiceOption,
+  roomFilter?: ChoiceOption,
+}
+
 // Data representation
 
 export type Supervisor = {

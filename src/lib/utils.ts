@@ -1,5 +1,26 @@
-import type { ScheduleEvent } from "./types";
+import type { ScheduleEvent, GlobalFilter } from "./types";
 import { type EventContentArg, type EventInput } from 'svelte-fullcalendar'
+
+export const filterScheduleEvents = (scheduleEvents: ScheduleEvent[], filters: GlobalFilter): ScheduleEvent[] => {
+  return scheduleEvents.filter((event: ScheduleEvent) => {
+    const matchesTeachingUnit = filters.lehreinheitFilter === undefined || event.studyProgram.some((studyProgram) => studyProgram.teachingUnitId === filters.lehreinheitFilter?.value)
+    const matchesStudyProgram = filters.studyProgramFilter === undefined || event.studyProgram.some((studyProgram) => studyProgram.id === filters.studyProgramFilter?.value)
+    const matchesPo = filters.poFilter === undefined || event.studyProgram.some((studyProgram) => studyProgram.poId === filters.poFilter?.value)
+    const matchesSemester = true
+    const matchesModule = filters.moduleFilter === undefined || event.module.id === filters.moduleFilter?.value
+    const matchesSupervisor = filters.dozentenFilter === undefined || event.supervisor.some((supervisor) => supervisor.id === filters.dozentenFilter?.value)
+    const matchesRoom = filters.roomFilter === undefined || event.room.id === filters.roomFilter.value
+
+    return true &&
+      matchesStudyProgram &&
+      matchesTeachingUnit &&
+      matchesPo &&
+      matchesSemester &&
+      matchesModule &&
+      matchesSupervisor &&
+      matchesRoom
+  })
+}
 
 export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): EventInput => {
   const alexStartDate = scheduleEvent.date + 'T' + scheduleEvent.start
