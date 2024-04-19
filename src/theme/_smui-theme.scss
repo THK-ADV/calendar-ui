@@ -13,8 +13,8 @@
 
 html,
 body {
-  background-color: theme.$surface;
-  color: theme.$on-surface;
+  background-color: var(--surface-2);
+  color: var(--on-surface);
 }
 
 a {

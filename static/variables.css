@@ -1,0 +1,15 @@
+:root {
+  --surface-0: #393c3c;
+  --surface-1: #2d2f31;
+  --surface-2: #1f1f1f;
+  --on-surface: #c4c7c5;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --surface-0: #ffffff;
+    --surface-1: #f3f6fc;
+    --surface-2: #e5e8ed;
+    --on-surface: #3b3b3b;
+  }
+}

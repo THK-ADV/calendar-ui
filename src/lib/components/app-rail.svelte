@@ -34,7 +34,10 @@ export let railItems: CopsAppRailItem[] = []
       <li class:disabled={railItem.disabled}  class:active={railItem.active}>
         <a href={railItem.url}>
           {#if railItem.icon}<Icon class="material-icons">{railItem.icon}</Icon>{/if}
-          {#if railItem.image}<img src={railItem.image} alt={'icon of' + railItem.text}>{/if}
+          {#if railItem.image}
+            <object class="cops-icons" data={railItem.image} title={'icon of' + railItem.text}>
+            </object>
+          {/if}
           <span>{railItem.text}</span>
         </a>
       </li>
@@ -44,12 +47,17 @@ export let railItems: CopsAppRailItem[] = []
 </div>
 
 <style>
+.cops-icons {
+  fill: var(--color-on-surface);
+  width: 2.617em;
+}
+
 .app-rail {
   min-width: 7.5em;
   font-size: .9em;
   padding: .5em;
-  background-color: #e0e0e0;
-  color: rgba(0, 0, 0, 0.87);
+  background-color: var(--surface-1);
+  color: var(--color-on-surface);
   height: 100%;
   & ul {
     display: flex;
@@ -78,12 +86,12 @@ export let railItems: CopsAppRailItem[] = []
     }
 
     &.active {
-      background-color: #efefef;
+      background-color: var(--surface-0);
       border-radius: 10px;
     }
 
     &:hover {
-      background-color: #efefef;
+      background-color: var(--surface-0);
       border-radius: 5px;
     }
 
@@ -97,6 +105,7 @@ export let railItems: CopsAppRailItem[] = []
       height: 6em;
       align-items: center;
       justify-content: center;
+      gap: 0.6em;
     }
 
     & span {
