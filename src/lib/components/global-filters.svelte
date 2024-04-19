@@ -9,10 +9,30 @@
     roomFilter,
     semesterFilter,
     studyProgramFilter,
+    scheduleEvents,
+    teachningUnits,
+    studyPrograms,
+    pos,
+    semesters,
+    modules,
+    dozenten,
+    rooms,
   } from '$lib/store'
-	import { dozenten, modules, pos, rooms, semesters, studyPrograms, teachningUnits } from '$lib/filter-options';
-	import type { ChoiceOption } from '$lib/types';
+	import type { ChoiceOption } from '$lib/types'
+	import { onMount } from 'svelte'
+	import { getDozenten, getModules, getPos, getRooms, getScheduleEvents, getSemesters, getStudyPrograms, getTeachningUnits } from '$lib/http';
   
+  onMount(async() => {
+    scheduleEvents.set(await getScheduleEvents())
+    teachningUnits.set(await getTeachningUnits())
+    studyPrograms.set(await getStudyPrograms())
+    pos.set(await getPos())
+    semesters.set(await getSemesters())
+    modules.set(await getModules())
+    dozenten.set(await getDozenten())
+    rooms.set(await getRooms())
+  })
+
   const getOptionLabel = (option: ChoiceOption) => option ? option.label : '';
   const resetFilters = () => {
     lehreinheitFilter.set(undefined)
@@ -28,7 +48,7 @@
 <div>
   <h1>Filter</h1>
   <Autocomplete
-    options={teachningUnits}
+    options={$teachningUnits}
     { getOptionLabel }
     label="Lehreinheit"
     textfield$variant="outlined"
@@ -36,7 +56,7 @@
     bind:value={$lehreinheitFilter}
   ></Autocomplete>
   <Autocomplete
-    options={studyPrograms}
+    options={$studyPrograms}
     { getOptionLabel }
     label="Studiengang"
     textfield$variant="outlined"
@@ -44,7 +64,7 @@
     bind:value={$studyProgramFilter}
   ></Autocomplete>
   <Autocomplete
-    options={pos}
+    options={$pos}
     { getOptionLabel }
     label="Prüfungsordnung"
     textfield$variant="outlined"
@@ -52,7 +72,7 @@
     bind:value={$poFilter}
   ></Autocomplete>
   <Autocomplete
-    options={semesters}
+    options={$semesters}
     { getOptionLabel }
     label="Semester"
     textfield$variant="outlined"
@@ -60,7 +80,7 @@
     bind:value={$semesterFilter}
   ></Autocomplete>
   <Autocomplete
-    options={modules}
+    options={$modules}
     { getOptionLabel }
     label="Modul"
     textfield$variant="outlined"
@@ -68,7 +88,7 @@
     bind:value={$moduleFilter}
   ></Autocomplete>
   <Autocomplete
-    options={dozenten}
+    options={$dozenten}
     { getOptionLabel }
     label="Dozent:in"
     textfield$variant="outlined"
@@ -76,7 +96,7 @@
     bind:value={$dozentenFilter}
   ></Autocomplete>
   <Autocomplete
-    options={rooms}
+    options={$rooms}
     { getOptionLabel }
     label="Raum"
     textfield$variant="outlined"

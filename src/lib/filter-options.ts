@@ -1,5 +1,7 @@
 import type { ChoiceOption } from '$lib/types'
 
+// ToDo: Replace with http requests and store results in store
+
 export const teachningUnits: Array<ChoiceOption> = [
   {label: 'Informatik', value: '7cdbdc29-f562-42c9-bbcd-6d15bf1ae822'},
   {label: 'Ingenieurwesen', value: '34aaf9b8-c406-466b-b386-164a51e3e317'},

@@ -2,6 +2,15 @@ import { derived, writable, type Readable, type Writable } from 'svelte/store'
 import type { ChoiceOption, GlobalFilter, ScheduleEvent } from './types'
 import { filterScheduleEvents, scheduleEventToFullCalendarEvent } from './utils'
 
+// Reference data (soon to be) requested by API
+export const teachningUnits: Writable<Array<ChoiceOption>> = writable([])
+export const studyPrograms: Writable<Array<ChoiceOption>> = writable([])
+export const pos: Writable<Array<ChoiceOption>> = writable([])
+export const semesters: Writable<Array<ChoiceOption>> = writable([])
+export const modules: Writable<Array<ChoiceOption>> = writable([])
+export const dozenten: Writable<Array<ChoiceOption>> = writable([])
+export const rooms: Writable<Array<ChoiceOption>> = writable([])
+
 // Events from data sources
 export const scheduleEvents: Writable<Array<ScheduleEvent>> = writable([])
 
