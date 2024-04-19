@@ -49,7 +49,7 @@ export let railItems: CopsAppRailItem[] = []
 <style>
 .cops-icons {
   fill: var(--color-on-surface);
-  width: 2.617em;
+  width: 1.618em;
 }
 
 .app-rail {
