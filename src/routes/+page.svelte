@@ -6,9 +6,9 @@
 
 <div class="h-layout">
   <nav>
-    <div style="flex-grow: 1"></div>
     <GlobalFilters></GlobalFilters>
     <EventSourceList></EventSourceList>
+    <div style="flex-grow: 1"></div>
   </nav>
   <main>
     <Calendar></Calendar>
