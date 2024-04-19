@@ -7,7 +7,7 @@
   --accent-light: #52002d;
   --accent-low-opacity: #a9025e11;
 
-  /* Full Calendar */
+  /* Full Calendar (https://fullcalendar.io/docs/css-customization)*/
   --fc-page-bg-color: #00000000; /* Event Border */
   --fc-border-color: var(--surface-0);
   --fc-button-bg-color: var(--accent);
