@@ -32,7 +32,7 @@
     },
     {
       type: 'LINK',
-      text: 'Schedule',
+      text: 'Calendar',
       image: '/assets/icons/schedule.svg',
       url: '',
       disabled: false,

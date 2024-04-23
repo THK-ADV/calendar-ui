@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { CalendarOptions } from 'svelte-fullcalendar';
+	import type { Calendar, CalendarOptions } from 'svelte-fullcalendar';
 	import deLocale from '@fullcalendar/core/locales/de';
 	import FullCalendar from 'svelte-fullcalendar';
 	import timeGridPlugin from '@fullcalendar/timegrid'

@@ -1,5 +1,5 @@
-import { dozenten, modules, pos, rooms, semesters, studyPrograms, teachningUnits } from "./filter-options";
-import type { ScheduleEvent } from "./types";
+import { semesters } from "./filter-options";
+import type { Module, Person, Room, ScheduleEvent, StudyProgram, TeachingUnit } from "./types";
 
 export async function getScheduleEvents(from?: string, to?: string) {
   const baseUrl = 'http://lwivs49.gm.fh-koeln.de:9000/scheduleEntries?extend=true'
@@ -13,15 +13,17 @@ export async function getScheduleEvents(from?: string, to?: string) {
 }
 
 export async function getTeachningUnits() {
-  return teachningUnits
+  const url = 'http://lwivs49.gm.fh-koeln.de:9000/teachingUnits'
+  const response = await fetch(url);
+  const data: Array<TeachingUnit> = await response.json();
+  return data;
 }
 
 export async function getStudyPrograms() {
-  return studyPrograms
-}
-
-export async function getPos() {
-  return pos
+  const url = 'http://lwivs49.gm.fh-koeln.de:9000/studyPrograms'
+  const response = await fetch(url);
+  const data: Array<StudyProgram> = await response.json();
+  return data;
 }
 
 export async function getSemesters() {
@@ -29,13 +31,22 @@ export async function getSemesters() {
 }
 
 export async function getModules() {
-  return modules
+  const url = 'http://lwivs49.gm.fh-koeln.de:9000/modules'
+  const response = await fetch(url);
+  const data: Array<Module> = await response.json();
+  return data;
 }
 
 export async function getDozenten() {
-  return dozenten
+  const url = 'http://lwivs49.gm.fh-koeln.de:9000/people'
+  const response = await fetch(url);
+  const data: Array<Person> = await response.json();
+  return data;
 }
 
 export async function getRooms() {
-  return rooms
+  const url = 'http://lwivs49.gm.fh-koeln.de:9000/rooms'
+  const response = await fetch(url);
+  const data: Array<Room> = await response.json();
+  return data;
 }

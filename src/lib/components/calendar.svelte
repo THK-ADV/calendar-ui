@@ -1,18 +1,30 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-	import BaseCalendar from './base-calendar.svelte';
-	import type { CalendarOptions } from 'svelte-fullcalendar';
-  import { scheduleEvents, events } from '$lib/store'
-	import { getScheduleEvents } from '$lib/http';
-	import { scheduleEventRenderer } from '$lib/utils';
+  import { onMount } from 'svelte'
+	import BaseCalendar from './base-calendar.svelte'
+	import type { CalendarOptions } from 'svelte-fullcalendar'
+  import { scheduleEvents, events, selectedDateRange } from '$lib/store'
+	import { getScheduleEvents } from '$lib/http'
+	import { scheduleEventRenderer } from '$lib/utils'
+  import { createEventDispatcher } from 'svelte'
+
+  const dispatch = createEventDispatcher();
 
   onMount(async() => {
     scheduleEvents.set(await getScheduleEvents())
+    selectedDateRange.subscribe(async (newRange) => {
+      if(!newRange) return;
+      scheduleEvents.set(await getScheduleEvents(newRange.from, newRange.to))
+    })
   })
 
   let options: CalendarOptions = {
     events: [],
-		eventContent: scheduleEventRenderer
+		eventContent: scheduleEventRenderer,
+    datesSet: async (arg) => {
+      const newRange = {from: arg.startStr.split('T')[0], to: arg.endStr.split('T')[0]}
+      selectedDateRange.set(newRange)
+      dispatch('dateRangeChanged', newRange)
+    }
   }
 
   events.subscribe((events) => options = {...options, events: events})

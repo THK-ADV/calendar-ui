@@ -1,4 +1,4 @@
-import type { ScheduleEvent, GlobalFilter } from "./types";
+import type { ScheduleEvent, GlobalFilter, TeachingUnit, ChoiceOption, StudyProgram, Module, Person, Room, Semester } from "./types";
 import { type EventContentArg, type EventInput } from 'svelte-fullcalendar'
 
 export const filterScheduleEvents = (scheduleEvents: ScheduleEvent[], filters: GlobalFilter): ScheduleEvent[] => {
@@ -38,6 +38,13 @@ export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): 
     }
   }
 }
+
+export const teachingUnitToChoiceOption = (teachingUnit: TeachingUnit): ChoiceOption => ({ label: teachingUnit.deLabel, value: teachingUnit.id })
+export const studyProgramToChoiceOption = (studyProgram: StudyProgram): ChoiceOption => ({ label: `${ studyProgram.degree } ${ studyProgram.deLabel } (PO${ studyProgram.poNumber })`, value: studyProgram.id })
+export const moduleToChoiceOption = (module: Module): ChoiceOption => ({ label: `${ module.label } (${ module.abbrev })`, value: module.id })
+export const personToChoiceOption = (person: Person): ChoiceOption => ({ label: `${ person.firstname } ${ person.lastname }`, value: person.id })
+export const roomToChoiceOption = (room: Room): ChoiceOption => ({ label: `${room.identifier} (${room.label})`, value: room.id })
+export const semesterToChoiceOption = (semester: Semester) => ({ label: `${semester.label}. Semester`, value: semester.id })
 
 export const scheduleEventRenderer = (arg: EventContentArg) => {
   if (arg.event.allDay) return {html: 			`

@@ -1,42 +1,45 @@
 import { derived, writable, type Readable, type Writable } from 'svelte/store'
-import type { ChoiceOption, GlobalFilter, ScheduleEvent } from './types'
-import { filterScheduleEvents, scheduleEventToFullCalendarEvent } from './utils'
+import { DataSources, type ChoiceOption, type DateRange, type GlobalFilter, type Module, type Person, type Room, type ScheduleEvent, type Semester, type StudyProgram, type TeachingUnit } from './types'
+import { filterScheduleEvents, moduleToChoiceOption, personToChoiceOption, roomToChoiceOption, scheduleEventToFullCalendarEvent, semesterToChoiceOption, studyProgramToChoiceOption, teachingUnitToChoiceOption } from './utils'
 
 // Reference data (soon to be) requested by API
-export const teachningUnits: Writable<Array<ChoiceOption>> = writable([])
-export const studyPrograms: Writable<Array<ChoiceOption>> = writable([])
-export const pos: Writable<Array<ChoiceOption>> = writable([])
-export const semesters: Writable<Array<ChoiceOption>> = writable([])
-export const modules: Writable<Array<ChoiceOption>> = writable([])
-export const dozenten: Writable<Array<ChoiceOption>> = writable([])
-export const rooms: Writable<Array<ChoiceOption>> = writable([])
+export const teachningUnits: Writable<Array<TeachingUnit>> = writable([])
+export const studyPrograms: Writable<Array<StudyProgram>> = writable([])
+export const semesters: Writable<Array<Semester>> = writable([])
+export const modules: Writable<Array<Module>> = writable([])
+export const dozenten: Writable<Array<Person>> = writable([])
+export const rooms: Writable<Array<Room>> = writable([])
 
-// Events from data sources
-export const scheduleEvents: Writable<Array<ScheduleEvent>> = writable([])
+export const teachinUnitsAsChoiceOptions = derived([teachningUnits], ([$teachningUnits]) => $teachningUnits.map(teachingUnitToChoiceOption))
+export const studyProgramsAsChoiceOptions = derived([studyPrograms], ([$studyPrograms]) => $studyPrograms.map(studyProgramToChoiceOption))
+export const semestersAsChoiceOptions = derived([semesters], ([$semesters]) => $semesters.map(semesterToChoiceOption))
+export const modulesAsChoiceOptions = derived([modules], ([$modules]) => $modules.map(moduleToChoiceOption))
+export const dozentenAsChoiceOptions = derived([dozenten], ([$dozenten]) => $dozenten.filter((person) => person.kind === 'person').map(personToChoiceOption))
+export const roomsAsChoiceOptions = derived([rooms], ([$rooms]) => $rooms.map(roomToChoiceOption))
 
 // Filters
-export const lehreinheitFilter: Writable<ChoiceOption | undefined> = writable()
-export const studyProgramFilter: Writable<ChoiceOption | undefined> = writable()
-export const poFilter: Writable<ChoiceOption | undefined> = writable()
-export const semesterFilter: Writable<ChoiceOption | undefined> = writable()
-export const moduleFilter: Writable<ChoiceOption | undefined> = writable()
-export const dozentenFilter: Writable<ChoiceOption | undefined> = writable()
-export const roomFilter: Writable<ChoiceOption | undefined> = writable()
+
+export const selectedTeachingUnit: Writable<ChoiceOption | undefined> = writable()
+export const selectedStudyProgram: Writable<ChoiceOption | undefined> = writable()
+export const selectedSemester: Writable<ChoiceOption | undefined> = writable()
+export const selectedModule: Writable<ChoiceOption | undefined> = writable()
+export const selectedDozent: Writable<ChoiceOption | undefined> = writable()
+export const selectedRoom: Writable<ChoiceOption | undefined> = writable()
+
+export const filteredStudyProgramsAsChoiceOptions = derived([studyPrograms, selectedTeachingUnit], ([$studyPrograms, $selectedTeachingUnit]) => $selectedTeachingUnit === undefined ? $studyPrograms.map(studyProgramToChoiceOption) : $studyPrograms.filter((sp) => sp.teachingUnit === $selectedTeachingUnit?.value).map(studyProgramToChoiceOption))
 
 export const filters: Readable<GlobalFilter> = derived(
   [
-    lehreinheitFilter,
-    studyProgramFilter,
-    poFilter,
-    semesterFilter,
-    moduleFilter,
-    dozentenFilter,
-    roomFilter
+    selectedTeachingUnit,
+    selectedStudyProgram,
+    selectedSemester,
+    selectedModule,
+    selectedDozent,
+    selectedRoom
   ],
   ([
     $lehreinheitFilter,
     $studyProgramFilter,
-    $poFilter,
     $semesterFilter,
     $moduleFilter,
     $dozentenFilter,
@@ -44,7 +47,6 @@ export const filters: Readable<GlobalFilter> = derived(
   ]) => ({
     lehreinheitFilter: $lehreinheitFilter,
     studyProgramFilter: $studyProgramFilter,
-    poFilter: $poFilter,
     semesterFilter: $semesterFilter,
     moduleFilter: $moduleFilter,
     dozentenFilter: $dozentenFilter,
@@ -52,7 +54,14 @@ export const filters: Readable<GlobalFilter> = derived(
   })
 )
 
-export const events = derived([scheduleEvents, filters], ([$scheduleEvents, $filters]) => {
-  const filteredScheduleEvents = filterScheduleEvents($scheduleEvents, $filters).map(scheduleEventToFullCalendarEvent);
-  return filteredScheduleEvents
+// Events from data sources
+
+export const selectedDateRange: Writable<DateRange | undefined> = writable()
+export const selectedDataSources: Writable<Array<string>> = writable([DataSources.SCHEDULE])
+
+export const scheduleEvents: Writable<Array<ScheduleEvent>> = writable([])
+
+export const events = derived([scheduleEvents, filters, selectedDataSources], ([$scheduleEvents, $filters, $selectedDataSources]) => {
+  const scheduleEvents = $selectedDataSources.includes(DataSources.SCHEDULE) ? filterScheduleEvents($scheduleEvents, $filters).map(scheduleEventToFullCalendarEvent) : []
+  return [...scheduleEvents];
 })
