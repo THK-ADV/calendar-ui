@@ -28,7 +28,7 @@
 		slotMaxTime: '24:00:00',
 		slotDuration: '00:15:00',
 		slotLabelInterval: { hours:1 },
-		scrollTime: '09:00:00',
+		scrollTime: '08:00:00',
 		allDaySlot: true,
 		hiddenDays: [0],
 		expandRows: true,
