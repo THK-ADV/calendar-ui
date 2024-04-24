@@ -6,7 +6,7 @@ export const filterScheduleEvents = (scheduleEvents: ScheduleEvent[], filters: G
     const matchesTeachingUnit = filters.lehreinheitFilter === undefined || event.studyProgram.some((studyProgram) => studyProgram.teachingUnitId === filters.lehreinheitFilter?.value)
     const matchesStudyProgram = filters.studyProgramFilter === undefined || event.studyProgram.some((studyProgram) => studyProgram.id === filters.studyProgramFilter?.value)
     const matchesPo = filters.poFilter === undefined || event.studyProgram.some((studyProgram) => studyProgram.poId === filters.poFilter?.value)
-    const matchesSemester = true
+    const matchesSemester = filters.semesterFilter === undefined || event.studyProgram.some((sp) => sp.recommendedSemester.includes(parseInt(filters.semesterFilter!.value)))
     const matchesModule = filters.moduleFilter === undefined || event.module.id === filters.moduleFilter?.value
     const matchesSupervisor = filters.dozentenFilter === undefined || event.supervisor.some((supervisor) => supervisor.id === filters.dozentenFilter?.value)
     const matchesRoom = filters.roomFilter === undefined || event.room.id === filters.roomFilter.value

@@ -79,6 +79,7 @@ export type StudyProgram = {
   teachingUnitId?: string,
   teachingUnitDeLabel?: string,
   teachingUnitEnLabel?: string,
+  recommendedSemester: Array<number>
   mandatory: boolean,
   isFocus: boolean
 }
