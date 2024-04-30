@@ -20,7 +20,7 @@ export async function getTeachningUnits() {
 }
 
 export async function getStudyPrograms() {
-  const url = 'http://lwivs49.gm.fh-koeln.de:9000/studyPrograms'
+  const url = 'http://lwivs49.gm.fh-koeln.de:9000/studyPrograms?extend=true'
   const response = await fetch(url);
   const data: Array<StudyProgram> = await response.json();
   return data;

@@ -8,8 +8,8 @@ export const filterScheduleEvents = (scheduleEvents: ScheduleEvent[], filters: G
     const matchesPo = filters.poFilter === undefined || event.studyProgram.some((studyProgram) => studyProgram.poId === filters.poFilter?.value)
     const matchesSemester = filters.semesterFilter === undefined || event.studyProgram.some((sp) => sp.recommendedSemester.includes(parseInt(filters.semesterFilter!.value)))
     const matchesModule = filters.moduleFilter === undefined || event.module.id === filters.moduleFilter?.value
-    const matchesSupervisor = filters.dozentenFilter === undefined || event.supervisor.some((supervisor) => supervisor.id === filters.dozentenFilter?.value)
-    const matchesRoom = filters.roomFilter === undefined || event.room.id === filters.roomFilter.value
+    const matchesSupervisor = filters.dozentenFilter === undefined || event.supervisor.some((supervisor) => supervisor.id === filters.dozentenFilter!.value)
+    const matchesRoom = filters.roomFilter === undefined || event.rooms.some((room) => room.id === filters.roomFilter!.value)
 
     return true &&
       matchesStudyProgram &&
@@ -20,6 +20,18 @@ export const filterScheduleEvents = (scheduleEvents: ScheduleEvent[], filters: G
       matchesSupervisor &&
       matchesRoom
   })
+}
+
+export const buildRoomsLabel = (rooms: Array<Room>) => {
+  return rooms.map((room) => room.identifier).join(', ')
+}
+
+export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
+  const degreePart = studyProgram.degree ? studyProgram.degree.label + ' ' : ''
+  const studyProgramLabel = studyProgram.deLabel
+  const specilizationPart = studyProgram.specialization ? ` - ${studyProgram.specialization.label}` : ''
+  const poPart = ` (PO${studyProgram.poNumber})`
+  return degreePart + studyProgramLabel + specilizationPart + poPart
 }
 
 export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): EventInput => {
@@ -34,13 +46,13 @@ export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): 
       type: scheduleEvent.coursePart[0],
       abbrev: scheduleEvent.module.abbrev,
       lecturer: { name: supervisor.firstname + ' ' + supervisor.lastname, img: `https://ui-avatars.com/api/?name=${supervisor.firstname}+${supervisor.lastname}` },
-      location: { name: scheduleEvent.room.identifier, identifier: scheduleEvent.room.identifier }
+      location: { name: buildRoomsLabel(scheduleEvent.rooms), identifier: buildRoomsLabel(scheduleEvent.rooms) }
     }
   }
 }
 
 export const teachingUnitToChoiceOption = (teachingUnit: TeachingUnit): ChoiceOption => ({ label: teachingUnit.deLabel, value: teachingUnit.id })
-export const studyProgramToChoiceOption = (studyProgram: StudyProgram): ChoiceOption => ({ label: `${ studyProgram.degree } ${ studyProgram.deLabel } (PO${ studyProgram.poNumber })`, value: studyProgram.id })
+export const studyProgramToChoiceOption = (studyProgram: StudyProgram): ChoiceOption => ({ label: buildStudyProgramLabel(studyProgram), value: studyProgram.id })
 export const moduleToChoiceOption = (module: Module): ChoiceOption => ({ label: `${ module.label } (${ module.abbrev })`, value: module.id })
 export const personToChoiceOption = (person: Person): ChoiceOption => ({ label: `${ person.firstname } ${ person.lastname }`, value: person.id })
 export const roomToChoiceOption = (room: Room): ChoiceOption => ({ label: `${room.identifier} (${room.label})`, value: room.id })

@@ -66,22 +66,31 @@ export type Module = {
   parts?: string[],
 }
 
+export type Degree = {
+  id: string,
+  label: string,
+}
+
+export type Specialization = {
+  id: string,
+  label: string,
+}
+
 export type StudyProgram = {
   id: string,
   deLabel: string,
   enLabel: string,
   poId: string,
   poNumber: number,
-  degreeId: string,
-  degreeLabel?: string,
-  degree?: string,
+  degree: Degree,
   teachingUnit?: string,
   teachingUnitId?: string,
   teachingUnitDeLabel?: string,
   teachingUnitEnLabel?: string,
   recommendedSemester: Array<number>
   mandatory: boolean,
-  isFocus: boolean
+  isFocus: boolean,
+  specialization?: Specialization
 }
 
 export type ScheduleEvent = {
@@ -90,7 +99,7 @@ export type ScheduleEvent = {
   start: string,
   end: string,
   coursePart: string,
-  room: Room,
+  rooms: Array<Room>,
   module: Module,
   supervisor: Array<Person>,
   studyProgram: Array<StudyProgram>
