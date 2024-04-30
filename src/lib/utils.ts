@@ -26,9 +26,12 @@ export const buildRoomsLabel = (rooms: Array<Room>) => {
   return rooms.map((room) => room.identifier).join(', ')
 }
 
+export const buildLecturerLabel = (lecturer: Person) => `${lecturer.firstname} ${lecturer.lastname}`
+export const buildLecturersLabel = (lecturers: Array<Person>) => lecturers.map(buildLecturerLabel).join(', ')
+
 export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
   const degreePart = studyProgram.degree ? studyProgram.degree.label + ' ' : ''
-  const studyProgramLabel = studyProgram.deLabel
+  const studyProgramLabel = studyProgram.label
   const specilizationPart = studyProgram.specialization ? ` - ${studyProgram.specialization.label}` : ''
   const poPart = ` (PO${studyProgram.poNumber})`
   return degreePart + studyProgramLabel + specilizationPart + poPart
@@ -39,6 +42,7 @@ export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): 
   const alexEndDate = scheduleEvent.date + 'T' + scheduleEvent.end
   const supervisor = scheduleEvent.supervisor[0]
   return {
+    id: scheduleEvent.id,
     title: scheduleEvent.module.label,
     start: alexStartDate,
     end: alexEndDate,

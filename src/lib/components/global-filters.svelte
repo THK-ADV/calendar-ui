@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _ } from 'svelte-i18n'
   import Autocomplete from '@smui-extra/autocomplete'
   import Button from '@smui/button'
   import {
@@ -49,11 +50,11 @@
 </script>
 
 <div>
-  <h1>Filter</h1>
+  <h1>{$_('filters')}</h1>
   <Autocomplete
     options={$teachinUnitsAsChoiceOptions}
     { getOptionLabel }
-    label="Lehreinheit"
+    label={$_('teaching-unit')}
     textfield$variant="outlined"
     textfield$style="width: 100%;"
     bind:value={$selectedTeachingUnit}
@@ -61,7 +62,7 @@
   <Autocomplete
     options={$filteredStudyProgramsAsChoiceOptions}
     { getOptionLabel }
-    label="Studiengang"
+    label={$_('study-program')}
     textfield$variant="outlined"
     textfield$style="width: 100%;"
     bind:value={$selectedStudyProgram}
@@ -69,7 +70,7 @@
   <Autocomplete
     options={$semestersAsChoiceOptions}
     { getOptionLabel }
-    label="Semester"
+    label={$_('semester')}
     textfield$variant="outlined"
     textfield$style="width: 100%;"
     bind:value={$selectedSemester}
@@ -77,7 +78,7 @@
   <Autocomplete
     options={$modulesAsChoiceOptions}
     { getOptionLabel }
-    label="Modul"
+    label={$_('module')}
     textfield$variant="outlined"
     textfield$style="width: 100%;"
     bind:value={$selectedModule}
@@ -85,7 +86,7 @@
   <Autocomplete
     options={$dozentenAsChoiceOptions}
     { getOptionLabel }
-    label="Dozent:in"
+    label={$_('lecturer')}
     textfield$variant="outlined"
     textfield$style="width: 100%;"
     bind:value={$selectedDozent}
@@ -93,12 +94,12 @@
   <Autocomplete
     options={$roomsAsChoiceOptions}
     { getOptionLabel }
-    label="Raum"
+    label={$_('room')}
     textfield$variant="outlined"
     textfield$style="width: 100%;"
     bind:value={$selectedRoom}
   ></Autocomplete>
-  <Button variant="outlined" on:click={ resetFilters }>Clear filters</Button>
+  <Button variant="outlined" on:click={ resetFilters }>{$_('clear-filters')}</Button>
 </div>
 
 <style>

@@ -20,11 +20,14 @@
 		"@fullcalendar/daygrid": "^6.1.11",
 		"@fullcalendar/interaction": "^6.1.11",
 		"@fullcalendar/timegrid": "^6.1.11",
+		"@rollup/plugin-json": "^6.1.0",
 		"@smui-extra/autocomplete": "^7.0.0-beta.18",
 		"@smui/button": "^7.0.0-beta.18",
 		"@smui/card": "^7.0.0-beta.18",
 		"@smui/checkbox": "^7.0.0-beta.18",
 		"@smui/common": "^7.0.0-beta.18",
+		"@smui/dialog": "^7.0.0-beta.18",
+		"@smui/drawer": "^7.0.0-beta.18",
 		"@smui/list": "^7.0.0-beta.18",
 		"@smui/textfield": "^7.0.0-beta.18",
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -47,5 +50,8 @@
 		"vite": "^5.0.3",
 		"vitest": "^1.2.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"svelte-i18n": "^4.0.0"
+	}
 }

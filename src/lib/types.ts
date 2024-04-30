@@ -1,7 +1,7 @@
 // To be defined
 
 export enum DataSources {
-  SCHEDULE = 'Stundenplanung'
+  SCHEDULE = 'schedule'
 }
 
 export type DateRange = {
@@ -78,8 +78,7 @@ export type Specialization = {
 
 export type StudyProgram = {
   id: string,
-  deLabel: string,
-  enLabel: string,
+  label: string,
   poId: string,
   poNumber: number,
   degree: Degree,
@@ -104,3 +103,20 @@ export type ScheduleEvent = {
   supervisor: Array<Person>,
   studyProgram: Array<StudyProgram>
 }
+
+export type Event = {
+  label: string
+  start: string,
+  end: string,
+}
+
+export type HolidayEvent = Event;
+
+export type SemesterEvent = Event & {
+  context?: {
+    teachingUnit: string,
+    semesterIndex: number,
+  }
+}
+
+

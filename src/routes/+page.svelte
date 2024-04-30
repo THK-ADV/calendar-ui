@@ -2,6 +2,16 @@
   import EventSourceList from '$lib/components/event-source-list.svelte'
 	import Calendar from '$lib/components/calendar.svelte'
   import GlobalFilters from '$lib/components/global-filters.svelte';
+	import ScheduleEventDetails from '$lib/components/schedule-event-details.svelte';
+  import { selectedScheduleEvent, selectedScheduleEventId } from '$lib/store'
+
+  let open = false
+
+  selectedScheduleEventId.subscribe((id) => open = id !== undefined)
+
+  const deselectScheduleEvent = () => {
+    selectedScheduleEventId.set(undefined)
+  }
 </script>
 
 <div class="h-layout">
@@ -13,6 +23,7 @@
   <main>
     <Calendar></Calendar>
   </main>
+  <ScheduleEventDetails {open} scheduleEvent={$selectedScheduleEvent} on:closed={deselectScheduleEvent}></ScheduleEventDetails>
 </div>
 
 <style>

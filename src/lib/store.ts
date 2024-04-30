@@ -1,4 +1,4 @@
-import { derived, writable, type Readable, type Writable } from 'svelte/store'
+import { derived, writable, get, type Readable, type Writable } from 'svelte/store'
 import { DataSources, type ChoiceOption, type DateRange, type GlobalFilter, type Module, type Person, type Room, type ScheduleEvent, type Semester, type StudyProgram, type TeachingUnit } from './types'
 import { filterScheduleEvents, moduleToChoiceOption, personToChoiceOption, roomToChoiceOption, scheduleEventToFullCalendarEvent, semesterToChoiceOption, studyProgramToChoiceOption, teachingUnitToChoiceOption } from './utils'
 
@@ -64,4 +64,17 @@ export const scheduleEvents: Writable<Array<ScheduleEvent>> = writable([])
 export const events = derived([scheduleEvents, filters, selectedDataSources], ([$scheduleEvents, $filters, $selectedDataSources]) => {
   const scheduleEvents = $selectedDataSources.includes(DataSources.SCHEDULE) ? filterScheduleEvents($scheduleEvents, $filters).map(scheduleEventToFullCalendarEvent) : []
   return [...scheduleEvents];
+})
+
+// Selection (click) on schedule event
+export const selectedScheduleEventId: Writable<string | undefined> = writable()
+
+export const selectedScheduleEvent: Writable<ScheduleEvent | undefined> = writable()
+
+selectedScheduleEventId.subscribe((id) => {
+  selectedScheduleEvent.set(get(scheduleEvents).find((scheduleEvent) => scheduleEvent.id === id))
+})
+
+export const selectedScheduleEventAlt = derived([scheduleEvents, selectedScheduleEventId], ([$scheduleEvents, $selectedScheduleEventId]) => {
+  return $scheduleEvents.find((scheduleEvent) => scheduleEvent.id === $selectedScheduleEventId)
 })

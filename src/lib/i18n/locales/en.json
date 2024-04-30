@@ -1,0 +1,23 @@
+{
+  "filters": "Filters",
+  "teaching-unit": "Teachning unit",
+  "study-program": "Study Program",
+  "semester": "Semester",
+  "module": "Module",
+  "lecturer": "Lecturer",
+  "room": "Room",
+  "clear-filters": "Clear filters",
+  "data-sources": "Data sources",
+  "module-details": "Module details",
+  "data-sources-translations": {
+    "schedule": "Schedule",
+    "exams": "Exams",
+    "holidays": "Holidays",
+    "campus-events": "Campus events",
+    "semester": "Semester information"
+  },
+  "course-parts": {
+    "lecture": "Lecture",
+    "practical": "Practical"
+  }
+}

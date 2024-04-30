@@ -1,0 +1,24 @@
+{
+  "filters": "Filter",
+  "teaching-unit": "Lehreinheit",
+  "study-program": "Studiengang",
+  "semester": "Semester",
+  "module": "Modul",
+  "lecturer": "Dozent:in",
+  "room": "Raum",
+  "clear-filters": "Filter zurücksetzen",
+  "schedule": "Stundenplan",
+  "data-sources": "Datenquellen",
+  "module-details": "Moduldetails",
+  "data-sources-translations": {
+    "schedule": "Stundenplan",
+    "exams": "Prüfungen",
+    "holidays": "Feiertage",
+    "campus-events": "Campusveranstaltungen",
+    "semester": "Semesterplan"
+  },
+  "course-parts": {
+    "lecture": "Vorlesung",
+    "practical": "Praktikum"
+  }
+}
