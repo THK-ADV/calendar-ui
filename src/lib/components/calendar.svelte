@@ -10,7 +10,6 @@
   const dispatch = createEventDispatcher();
 
   onMount(async() => {
-    scheduleEvents.set(await getScheduleEvents())
     selectedDateRange.subscribe(async (newRange) => {
       if(!newRange) return;
       scheduleEvents.set(await getScheduleEvents(newRange.from, newRange.to))
@@ -20,7 +19,7 @@
   let options: CalendarOptions = {
     events: [],
 		eventContent: scheduleEventRenderer,
-    datesSet: async (arg) => {
+    datesSet: (arg) => {
       const newRange = {from: arg.startStr.split('T')[0], to: arg.endStr.split('T')[0]}
       selectedDateRange.set(newRange)
       dispatch('dateRangeChanged', newRange)
