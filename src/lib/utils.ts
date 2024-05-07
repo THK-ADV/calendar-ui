@@ -22,6 +22,17 @@ export const filterScheduleEvents = (scheduleEvents: ScheduleEvent[], filters: G
   })
 }
 
+// TODO: remove allStudyProgramsInTeachingUnit after Alex added teachingUnit to endpoint
+export const filterModules = (modules: Module[], filters: Partial<GlobalFilter>, allStudyProgramsInTeachingUnit: Array<StudyProgram>): Module[] => {
+  return modules.filter((module) => {
+    const matchesTeachingUnit = filters.lehreinheitFilter === undefined || module.studyPrograms.some((studyProgram) => allStudyProgramsInTeachingUnit.map((spInTu) => spInTu.id).includes(studyProgram.id))
+    const matchesStudyProgram = filters.studyProgramFilter === undefined || module.studyPrograms.some((studyProgram) => studyProgram.id === filters.studyProgramFilter?.value)
+    return true &&
+      matchesTeachingUnit &&
+      matchesStudyProgram
+  })
+}
+
 export const buildRoomsLabel = (rooms: Array<Room>) => {
   return rooms.map((room) => room.identifier).join(', ')
 }

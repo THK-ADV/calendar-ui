@@ -31,7 +31,7 @@ export async function getSemesters() {
 }
 
 export async function getModules() {
-  const url = 'http://lwivs49.gm.fh-koeln.de:9000/modules'
+  const url = 'http://lwivs49.gm.fh-koeln.de:9000/modules?extend=true'
   const response = await fetch(url);
   const data: Array<Module> = await response.json();
   return data;

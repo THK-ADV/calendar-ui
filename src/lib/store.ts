@@ -1,6 +1,6 @@
 import { derived, writable, get, type Readable, type Writable } from 'svelte/store'
 import { DataSources, type ChoiceOption, type DateRange, type GlobalFilter, type Module, type Person, type Room, type ScheduleEvent, type Semester, type StudyProgram, type TeachingUnit } from './types'
-import { filterScheduleEvents, moduleToChoiceOption, personToChoiceOption, roomToChoiceOption, scheduleEventToFullCalendarEvent, semesterToChoiceOption, studyProgramToChoiceOption, teachingUnitToChoiceOption } from './utils'
+import { filterModules, filterScheduleEvents, moduleToChoiceOption, personToChoiceOption, roomToChoiceOption, scheduleEventToFullCalendarEvent, semesterToChoiceOption, studyProgramToChoiceOption, teachingUnitToChoiceOption } from './utils'
 
 // Reference data (soon to be) requested by API
 export const teachningUnits: Writable<Array<TeachingUnit>> = writable([])
@@ -26,7 +26,13 @@ export const selectedModule: Writable<ChoiceOption | undefined> = writable()
 export const selectedDozent: Writable<ChoiceOption | undefined> = writable()
 export const selectedRoom: Writable<ChoiceOption | undefined> = writable()
 
-export const filteredStudyProgramsAsChoiceOptions = derived([studyPrograms, selectedTeachingUnit], ([$studyPrograms, $selectedTeachingUnit]) => $selectedTeachingUnit === undefined ? $studyPrograms.map(studyProgramToChoiceOption) : $studyPrograms.filter((sp) => sp.teachingUnit === $selectedTeachingUnit?.value).map(studyProgramToChoiceOption))
+export const filteredStudyPrograms = derived([studyPrograms, selectedTeachingUnit], ([$studyPrograms, $selectedTeachingUnit]) => $selectedTeachingUnit === undefined ? $studyPrograms : $studyPrograms.filter((sp) => sp.teachingUnit === $selectedTeachingUnit?.value))
+export const filteredStudyProgramsAsChoiceOptions = derived([filteredStudyPrograms], ([$filteredStudyPrograms]) => $filteredStudyPrograms.map(studyProgramToChoiceOption))
+
+// @Alex, please add TechingUnit to StudyProgram reference in modules?extend endpoint. Thanks!
+export const filteredModulesAsChoiceOptions = derived([modules, selectedTeachingUnit, selectedStudyProgram, filteredStudyPrograms], ([$modules, $selectedTeachingUnit, $selectedStudyProgram, $filteredStudyPrograms]) => {
+  return filterModules($modules, {lehreinheitFilter: $selectedTeachingUnit, studyProgramFilter: $selectedStudyProgram}, $filteredStudyPrograms).map(moduleToChoiceOption)
+})
 
 export const filters: Readable<GlobalFilter> = derived(
   [

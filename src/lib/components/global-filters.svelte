@@ -17,7 +17,7 @@
     semesters,
     semestersAsChoiceOptions,
     modules,
-    modulesAsChoiceOptions,
+    filteredModulesAsChoiceOptions,
     dozenten,
     dozentenAsChoiceOptions,
     rooms,
@@ -51,6 +51,7 @@
 
 <div>
   <h1>{$_('filters')}</h1>
+  {$filteredModulesAsChoiceOptions.length}
   <Autocomplete
     options={$teachinUnitsAsChoiceOptions}
     { getOptionLabel }
@@ -76,7 +77,7 @@
     bind:value={$selectedSemester}
   ></Autocomplete>
   <Autocomplete
-    options={$modulesAsChoiceOptions}
+    options={$filteredModulesAsChoiceOptions}
     { getOptionLabel }
     label={$_('module')}
     textfield$variant="outlined"

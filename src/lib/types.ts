@@ -63,7 +63,8 @@ export type Module = {
   abbrev: string,
   language?: string,
   season?: string,
-  parts?: string[],
+  parts?: Array<string>,
+  studyPrograms: Array<StudyProgram>,
 }
 
 export type Degree = {
