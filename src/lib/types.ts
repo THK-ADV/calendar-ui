@@ -95,10 +95,9 @@ export type StudyProgram = {
 
 export type ScheduleEvent = {
   id: string,
-  date: string,
   start: string,
   end: string,
-  coursePart: string,
+  courseLabel: string,
   rooms: Array<Room>,
   module: Module,
   supervisor: Array<Person>,
