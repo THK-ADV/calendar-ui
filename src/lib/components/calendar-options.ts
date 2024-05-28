@@ -40,5 +40,5 @@ export const basicCalendarOptions = {
       duration: { days: 1 },
       buttonText: '1 day'
     }
-  },
-}
+  }
+};

@@ -1,43 +1,43 @@
 :root {
-  --surface-0: #393c3c;
-  --surface-1: #2d2f31;
-  --surface-2: #1f1f1f;
-  --on-surface: #c4c7c5;
-  --accent: #a9025e;
-  --accent-light: #52002d;
-  --accent-low-opacity: #a9025e11;
+	--surface-0: #393c3c;
+	--surface-1: #2d2f31;
+	--surface-2: #1f1f1f;
+	--on-surface: #c4c7c5;
+	--accent: #a9025e;
+	--accent-light: #52002d;
+	--accent-low-opacity: #a9025e11;
 
-  /* Full Calendar (https://fullcalendar.io/docs/css-customization)*/
-  --fc-page-bg-color: #00000000; /* Event Border */
-  --fc-border-color: var(--surface-0);
-  --fc-button-bg-color: var(--accent);
-  --fc-button-border-color: #2C3E50;
-  --fc-button-hover-bg-color: #1e2b37;
-  --fc-button-hover-border-color: #1a252f;
-  --fc-button-active-bg-color: #1a252f;
-  --fc-button-active-border-color: #151e27;
-  --fc-event-bg-color: var(--accent-light);
-  --fc-event-border-color: var(--surface-1);
-  --fc-event-text-color: var(--on-surface);
-  --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
-  --fc-more-link-bg-color: #d0d0d0;
-  --fc-more-link-text-color: inherit;
-  --fc-non-business-color: rgba(215, 215, 215, 0.3);
-  --fc-bg-event-color: rgb(143, 223, 130);
-  --fc-bg-event-opacity: 0.3;
-  --fc-highlight-color: rgba(188, 232, 241, 0.3);
-  --fc-today-bg-color: var(--accent-low-opacity);
-  --fc-now-indicator-color: var(--accent);
+	/* Full Calendar (https://fullcalendar.io/docs/css-customization)*/
+	--fc-page-bg-color: #00000000; /* Event Border */
+	--fc-border-color: var(--surface-0);
+	--fc-button-bg-color: var(--accent);
+	--fc-button-border-color: #2c3e50;
+	--fc-button-hover-bg-color: #1e2b37;
+	--fc-button-hover-border-color: #1a252f;
+	--fc-button-active-bg-color: #1a252f;
+	--fc-button-active-border-color: #151e27;
+	--fc-event-bg-color: var(--accent-light);
+	--fc-event-border-color: var(--surface-1);
+	--fc-event-text-color: var(--on-surface);
+	--fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+	--fc-more-link-bg-color: #d0d0d0;
+	--fc-more-link-text-color: inherit;
+	--fc-non-business-color: rgba(215, 215, 215, 0.3);
+	--fc-bg-event-color: rgb(143, 223, 130);
+	--fc-bg-event-opacity: 0.3;
+	--fc-highlight-color: rgba(188, 232, 241, 0.3);
+	--fc-today-bg-color: var(--accent-low-opacity);
+	--fc-now-indicator-color: var(--accent);
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    --surface-0: #e5e8ed;
-    --surface-1: #f3f6fc;
-    --surface-2: #ffffff;
-    --on-surface: #3b3b3b;
-    --accent: #e6007e;
-    --accent-light: #ebbbd5;
-    --accent-low-opacity: #e6007e11;
-  }
+	:root {
+		--surface-0: #e5e8ed;
+		--surface-1: #f3f6fc;
+		--surface-2: #ffffff;
+		--on-surface: #3b3b3b;
+		--accent: #e6007e;
+		--accent-light: #ebbbd5;
+		--accent-low-opacity: #e6007e11;
+	}
 }
