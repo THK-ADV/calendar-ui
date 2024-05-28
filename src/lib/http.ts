@@ -1,8 +1,9 @@
-import { semesters } from "./filter-options";
-import type { Module, Person, Room, ScheduleEvent, StudyProgram, TeachingUnit } from "./types";
+import {semesters} from "./filter-options";
+import type {Module, Person, Room, ScheduleEvent, StudyProgram, TeachingUnit} from "./types";
+import {environment} from "$lib/environment";
 
 export async function getScheduleEvents(from?: string, to?: string) {
-  const baseUrl = 'http://lwivs49.gm.fh-koeln.de:9000/scheduleEntries?extend=true'
+  const baseUrl = `${environment.scheduleBaseUrl}/scheduleEntries?extend=true`
   const fromPart = from ? `&from=${from}` : ''
   const toPart = to ? `&to=${to}` : ''
   const requestUrl = baseUrl + fromPart + toPart;
@@ -13,14 +14,14 @@ export async function getScheduleEvents(from?: string, to?: string) {
 }
 
 export async function getTeachningUnits() {
-  const url = 'http://lwivs49.gm.fh-koeln.de:9000/teachingUnits'
+  const url = `${environment.scheduleBaseUrl}/teachingUnits`
   const response = await fetch(url);
   const data: Array<TeachingUnit> = await response.json();
   return data;
 }
 
 export async function getStudyPrograms() {
-  const url = 'http://lwivs49.gm.fh-koeln.de:9000/studyPrograms?extend=true'
+  const url = `${environment.scheduleBaseUrl}/studyPrograms?extend=true`
   const response = await fetch(url);
   const data: Array<StudyProgram> = await response.json();
   return data;
@@ -31,21 +32,21 @@ export async function getSemesters() {
 }
 
 export async function getModules() {
-  const url = 'http://lwivs49.gm.fh-koeln.de:9000/modules?extend=true'
+  const url = `${environment.scheduleBaseUrl}/modules?extend=true`
   const response = await fetch(url);
   const data: Array<Module> = await response.json();
   return data;
 }
 
 export async function getDozenten() {
-  const url = 'http://lwivs49.gm.fh-koeln.de:9000/people'
+  const url = `${environment.scheduleBaseUrl}/people`
   const response = await fetch(url);
   const data: Array<Person> = await response.json();
   return data;
 }
 
 export async function getRooms() {
-  const url = 'http://lwivs49.gm.fh-koeln.de:9000/rooms'
+  const url = `${environment.scheduleBaseUrl}/rooms`
   const response = await fetch(url);
   const data: Array<Room> = await response.json();
   return data;
