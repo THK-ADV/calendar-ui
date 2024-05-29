@@ -1,4 +1,4 @@
-import { derived, get, type Readable, writable, type Writable } from 'svelte/store';
+import {derived, get, type Readable, writable, type Writable} from 'svelte/store';
 import {
   type ChoiceOption,
   DataSources,
@@ -70,14 +70,12 @@ export const filteredStudyProgramsAsChoiceOptions = derived(
   ([$filteredStudyPrograms]) => $filteredStudyPrograms.map(studyProgramToChoiceOption)
 );
 
-// @Alex, please add TechingUnit to StudyProgram reference in modules?extend endpoint. Thanks!
 export const filteredModulesAsChoiceOptions = derived(
-  [modules, selectedTeachingUnit, selectedStudyProgram, filteredStudyPrograms],
-  ([$modules, $selectedTeachingUnit, $selectedStudyProgram, $filteredStudyPrograms]) =>
+  [modules, selectedTeachingUnit, selectedStudyProgram],
+  ([$modules, $selectedTeachingUnit, $selectedStudyProgram]) =>
     filterModules(
       $modules,
-      { lehreinheitFilter: $selectedTeachingUnit, studyProgramFilter: $selectedStudyProgram },
-      $filteredStudyPrograms
+      {lehreinheitFilter: $selectedTeachingUnit, studyProgramFilter: $selectedStudyProgram},
     ).map(moduleToChoiceOption)
 );
 
@@ -96,14 +94,14 @@ export const filters: Readable<GlobalFilter> = derived(
     $semesterFilter,
     $moduleFilter,
     $dozentenFilter,
-    $roomFilter
+    $roomFilter,
   ]) => ({
     lehreinheitFilter: $lehreinheitFilter,
     studyProgramFilter: $studyProgramFilter,
     semesterFilter: $semesterFilter,
     moduleFilter: $moduleFilter,
     dozentenFilter: $dozentenFilter,
-    roomFilter: $roomFilter
+    roomFilter: $roomFilter,
   })
 );
 
