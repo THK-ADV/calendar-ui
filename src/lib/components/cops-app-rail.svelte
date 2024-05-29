@@ -1,5 +1,6 @@
 <script lang="ts">
 	import AppRail from '$lib/components/app-rail.svelte';
+    import environment from "$lib/environment";
 
 	type CopsAppRailLink = {
 		type: 'LINK';
@@ -26,7 +27,7 @@
 	    type: 'LINK',
 	    text: 'Modules',
 	    image: '/assets/icons/modules.svg',
-	    url: 'http://lwivs49.gm.fh-koeln.de:8081/',
+	    url: environment.modulesBaseUrl,
 	    disabled: false,
 	    active: false
 	  },

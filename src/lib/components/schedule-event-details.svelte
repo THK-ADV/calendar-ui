@@ -6,10 +6,11 @@
 	import Dialog, { Content, Header, Title } from '@smui/dialog';
 	import type { ScheduleEvent } from '$lib/types';
 	import { buildLecturersLabel, buildRoomsLabel } from '$lib/utils';
+	import environment from "$lib/environment";
 	export let open: boolean;
 	export let scheduleEvent: ScheduleEvent | undefined;
 	const dispatch = createEventDispatcher();
-
+	const moduleUrl = environment.modulesBaseUrl
 	const close = () => {
 	  dispatch('closed');
 	};
@@ -24,7 +25,7 @@
 >
 	<Header>
 		<Title id="fullscreen-title"
-			>{scheduleEvent?.module.label} ({$_(`course-parts.${scheduleEvent?.courseLabel}`)})</Title
+			>{scheduleEvent?.module.label} ({scheduleEvent?.courseLabel})</Title
 		>
 		<IconButton action="close" class="material-icons">close</IconButton>
 	</Header>
@@ -46,7 +47,7 @@
 				>
 				<span style="display: flex; flex-direction: row; align-items: start; gap: .5em;"
 					><span class="material-icons" style="font-size: 1.5em;">open_in_new</span><a
-						href={'http://lwivs49.gm.fh-koeln.de:8081/modules/' + scheduleEvent?.module.id}
+						href={`${moduleUrl}/modules/${scheduleEvent?.module.id}` }
 						>{$_('module-details')}</a
 					></span
 				>

@@ -1,4 +1,4 @@
-import { type EventContentArg, type EventInput } from 'svelte-fullcalendar';
+import {type EventContentArg, type EventInput} from 'svelte-fullcalendar';
 import type {
   ChoiceOption,
   GlobalFilter,
@@ -17,60 +17,51 @@ export const filterScheduleEvents = (
 ): ScheduleEvent[] =>
   scheduleEvents.filter((event: ScheduleEvent) => {
     const matchesTeachingUnit =
-			filters.lehreinheitFilter === undefined ||
-			event.studyProgram.some(
-			  (studyProgram) => studyProgram.teachingUnitId === filters.lehreinheitFilter?.value
-			);
+      filters.lehreinheitFilter === undefined ||
+      event.studyProgram.some(({teachingUnitId}) => teachingUnitId === filters.lehreinheitFilter?.value);
     const matchesStudyProgram =
-			filters.studyProgramFilter === undefined ||
-			event.studyProgram.some(
-			  (studyProgram) => studyProgram.id === filters.studyProgramFilter?.value
-			);
+      filters.studyProgramFilter === undefined ||
+      event.studyProgram.some(({id}) => id === filters.studyProgramFilter?.value);
     const matchesPo =
-			filters.poFilter === undefined ||
-			event.studyProgram.some((studyProgram) => studyProgram.poId === filters.poFilter?.value);
+      filters.poFilter === undefined ||
+      event.studyProgram.some(({poId}) => poId === filters.poFilter?.value);
     const matchesSemester =
-			filters.semesterFilter === undefined ||
-			event.studyProgram.some((sp) =>
-			  sp.recommendedSemester.includes(parseInt(filters.semesterFilter!.value, 10))
-			);
+      filters.semesterFilter === undefined ||
+      event.studyProgram.some(({recommendedSemester}) =>
+        recommendedSemester.includes(parseInt(filters.semesterFilter!.value, 10))
+      );
     const matchesModule =
-			filters.moduleFilter === undefined || event.module.id === filters.moduleFilter?.value;
+      filters.moduleFilter === undefined ||
+      event.module.id === filters.moduleFilter?.value;
     const matchesSupervisor =
-			filters.dozentenFilter === undefined ||
-			event.supervisor.some((supervisor) => supervisor.id === filters.dozentenFilter!.value);
+      filters.dozentenFilter === undefined ||
+      event.supervisor.some(({id}) => id === filters.dozentenFilter?.value);
     const matchesRoom =
-			filters.roomFilter === undefined ||
-			event.rooms.some((room) => room.id === filters.roomFilter!.value);
+      filters.roomFilter === undefined ||
+      event.rooms.some(({id}) => id === filters.roomFilter?.value);
 
     return (
       matchesStudyProgram &&
-			matchesTeachingUnit &&
-			matchesPo &&
-			matchesSemester &&
-			matchesModule &&
-			matchesSupervisor &&
-			matchesRoom
+      matchesTeachingUnit &&
+      matchesPo &&
+      matchesSemester &&
+      matchesModule &&
+      matchesSupervisor &&
+      matchesRoom
     );
   });
 
-// TODO: remove allStudyProgramsInTeachingUnit after Alex added teachingUnit to endpoint
 export const filterModules = (
   modules: Module[],
-  filters: Partial<GlobalFilter>,
-  allStudyProgramsInTeachingUnit: Array<StudyProgram>
+  {lehreinheitFilter, studyProgramFilter}: Pick<GlobalFilter, 'lehreinheitFilter' | 'studyProgramFilter'>,
 ): Module[] =>
-  modules.filter((module) => {
+  modules.filter(({studyPrograms}) => {
     const matchesTeachingUnit =
-			filters.lehreinheitFilter === undefined ||
-			module.studyPrograms.some((studyProgram) =>
-			  allStudyProgramsInTeachingUnit.map((spInTu) => spInTu.id).includes(studyProgram.id)
-			);
+      lehreinheitFilter === undefined ||
+      studyPrograms.some(({teachingUnit}) => teachingUnit === lehreinheitFilter.value);
     const matchesStudyProgram =
-			filters.studyProgramFilter === undefined ||
-			module.studyPrograms.some(
-			  (studyProgram) => studyProgram.id === filters.studyProgramFilter?.value
-			);
+      studyProgramFilter === undefined ||
+      studyPrograms.some(({id}) => id === studyProgramFilter.value);
     return matchesTeachingUnit && matchesStudyProgram;
   });
 
@@ -116,7 +107,7 @@ export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): 
 };
 
 export const teachingUnitToChoiceOption = (teachingUnit: TeachingUnit): ChoiceOption => ({
-  label: teachingUnit.deLabel,
+  label: teachingUnit.label,
   value: teachingUnit.id
 });
 
