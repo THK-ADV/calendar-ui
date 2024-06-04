@@ -13,3 +13,6 @@ vite.config.ts.timestamp-*
 
 ### WebStorm ###
 .idea
+
+/static/smui-dark.css
+/static/smui.css
