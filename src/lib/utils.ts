@@ -1,15 +1,7 @@
 import {type EventContentArg, type EventInput} from 'svelte-fullcalendar';
-import type {
-  ChoiceOption,
-  GlobalFilter,
-  Module,
-  Person,
-  Room,
-  ScheduleEvent,
-  Semester,
-  StudyProgram,
-  TeachingUnit
-} from './types';
+import type {GlobalFilter, Holiday, Module, Person, Room, ScheduleEvent, SemesterPlan, StudyProgram} from './types';
+import {_} from 'svelte-i18n';
+import {get} from "svelte/store";
 
 export const filterScheduleEvents = (
   scheduleEvents: ScheduleEvent[],
@@ -18,7 +10,9 @@ export const filterScheduleEvents = (
   scheduleEvents.filter((event: ScheduleEvent) => {
     const matchesTeachingUnit =
       filters.lehreinheitFilter === undefined ||
-      event.studyProgram.some(({teachingUnitId}) => teachingUnitId === filters.lehreinheitFilter?.value);
+      event.studyProgram.some(
+        ({teachingUnitId}) => teachingUnitId === filters.lehreinheitFilter?.value
+      );
     const matchesStudyProgram =
       filters.studyProgramFilter === undefined ||
       event.studyProgram.some(({id}) => id === filters.studyProgramFilter?.value);
@@ -31,8 +25,7 @@ export const filterScheduleEvents = (
         recommendedSemester.includes(parseInt(filters.semesterFilter!.value, 10))
       );
     const matchesModule =
-      filters.moduleFilter === undefined ||
-      event.module.id === filters.moduleFilter?.value;
+      filters.moduleFilter === undefined || event.module.id === filters.moduleFilter?.value;
     const matchesSupervisor =
       filters.dozentenFilter === undefined ||
       event.supervisor.some(({id}) => id === filters.dozentenFilter?.value);
@@ -53,7 +46,10 @@ export const filterScheduleEvents = (
 
 export const filterModules = (
   modules: Module[],
-  {lehreinheitFilter, studyProgramFilter}: Pick<GlobalFilter, 'lehreinheitFilter' | 'studyProgramFilter'>,
+  {
+    lehreinheitFilter,
+    studyProgramFilter
+  }: Pick<GlobalFilter, 'lehreinheitFilter' | 'studyProgramFilter'>
 ): Module[] =>
   modules.filter(({studyPrograms}) => {
     const matchesTeachingUnit =
@@ -106,47 +102,40 @@ export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): 
   };
 };
 
-export const teachingUnitToChoiceOption = (teachingUnit: TeachingUnit): ChoiceOption => ({
-  label: teachingUnit.label,
-  value: teachingUnit.id
-});
+export const holidaysToFullCalendarEvent = (holidayEvent: Holiday): EventInput => {
+  return {
+    id: holidayEvent.label + holidayEvent.date,
+    title: holidayEvent.label,
+    start: holidayEvent.date,
+    allDay: true,
+    backgroundColor: '#FF55AA',
+    display: 'background',
+  };
+};
 
-export const studyProgramToChoiceOption = (studyProgram: StudyProgram): ChoiceOption => ({
-  label: buildStudyProgramLabel(studyProgram),
-  value: studyProgram.id
-});
-
-export const moduleToChoiceOption = (module: Module): ChoiceOption => ({
-  label: `${module.label} (${module.abbrev})`,
-  value: module.id
-});
-
-export const personToChoiceOption = (person: Person): ChoiceOption => ({
-  label: `${person.firstname} ${person.lastname}`,
-  value: person.id
-});
-
-export const roomToChoiceOption = (room: Room): ChoiceOption => ({
-  label: `${room.identifier} (${room.label})`,
-  value: room.id
-});
-
-export const semesterToChoiceOption = (semester: Semester) => ({
-  label: `${semester.label}. Semester`,
-  value: semester.id
-});
+export const semesterPlanToFullCalendarEvent = (semesterPlan: SemesterPlan, selectedSemester?: string): EventInput => {
+  const semesterLabel = get(_)('semester')
+  const title = semesterPlan.semester.index && !selectedSemester
+    ? `${semesterPlan.type.label} (${semesterLabel} ${semesterPlan.semester.index.replaceAll(',', ', ')})`
+    : semesterPlan.type.label
+  return {
+    id: semesterPlan.id,
+    title,
+    start: semesterPlan.start,
+    end: semesterPlan.end,
+    allDay: true,
+    backgroundColor: '#FFCCAA',
+  };
+};
 
 export const scheduleEventRenderer = (arg: EventContentArg) => {
-  if (arg.event.allDay)
+  if (arg.event.allDay) {
     return {
-      html: `
-  <div title="${arg.event.title}" style="display: flex; flex-direction: column; margin: 1em; gap: 1em; overflow: hidden;">
-    ${arg.event.title}
-  </div>
-  `
+      html: `<div title="${arg.event.title}" style="display: flex; flex-direction: column; margin: 1em; gap: 1em; overflow: hidden;">${arg.event.title}</div>`
     };
+  }
 
-  if (arg.view.type === 'timeGridWeek' || arg.view.type === 'timeGridDay')
+  if (arg.view.type === 'timeGridWeek' || arg.view.type === 'timeGridDay') {
     return {
       html: `
     <div title="${arg.event.title}" style="display: flex; flex-direction: column; height: 100%; padding: 1em; gap: 1em; overflow: hidden;">
@@ -158,11 +147,12 @@ export const scheduleEventRenderer = (arg: EventContentArg) => {
     </div>
   `
     };
+  }
 
-  if (arg.view.type === 'dayGridMonth')
+  if (arg.view.type === 'dayGridMonth') {
     return {
       html: `
-  <div title="${arg.event.title}" style="display: flex; flex-direction: column; margin: 1em; gap: 1em; overflow: hidden; width: 100%;">
+  <div title="${arg.event.title}" style="display: flex; flex-direction: row; margin: 1em; gap: 1em; overflow: hidden; width: 100%;">
     <img style="height: 20px; border-radius: 300px;" src="${arg.event.extendedProps.lecturer?.img ? arg.event.extendedProps.lecturer?.img : ''}" alt="lecturer">
     <span style="font-weight: 600; display: flex; align-items: center; flex-direction: row; gap: .5em;">${arg.event.extendedProps.abbrev} (${arg.event.extendedProps.type})</span>
     <span style="flex-grow: 1; display: flex; align-items: center; justify-content: center;"><hr style="width: 100%; background-color: #00000022; border: none; height: 1px;"></span>
@@ -170,5 +160,7 @@ export const scheduleEventRenderer = (arg: EventContentArg) => {
   </div>
   `
     };
+  }
+
   return '';
 };

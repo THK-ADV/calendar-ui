@@ -21,7 +21,7 @@ export const basicCalendarOptions = {
   slotMinTime: '07:00:00',
   slotMaxTime: '24:00:00',
   slotDuration: '00:15:00',
-  slotLabelInterval: { hours: 1 },
+  slotLabelInterval: {hours: 1},
   scrollTime: '09:00:00',
   allDaySlot: true,
   hiddenDays: [0],
@@ -32,12 +32,12 @@ export const basicCalendarOptions = {
   views: {
     timeGridSixDays: {
       type: 'timeGrid',
-      duration: { days: 6 },
+      duration: {days: 6},
       buttonText: '6 day'
     },
     timeGridOneDays: {
       type: 'timeGrid',
-      duration: { days: 1 },
+      duration: {days: 1},
       buttonText: '1 day'
     }
   }

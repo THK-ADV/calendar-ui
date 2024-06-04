@@ -1,9 +1,5 @@
 // To be defined
 
-export enum DataSources {
-  SCHEDULE = 'schedule'
-}
-
 export type DateRange = {
   from: string;
   to: string;
@@ -81,10 +77,12 @@ export type Module = {
   abbrev: string;
   language: string;
   season: string;
-  studyPrograms: Array<Pick<StudyProgram, 'id' | 'teachingUnit'> & {
-    mandatory: boolean,
-    focus: boolean
-  }>;
+  studyPrograms: Array<
+    Pick<StudyProgram, 'id' | 'teachingUnit'> & {
+    mandatory: boolean;
+    focus: boolean;
+  }
+  >;
 };
 
 export type ScheduleEvent = {
@@ -95,28 +93,29 @@ export type ScheduleEvent = {
   rooms: Array<Room>;
   module: Module;
   supervisor: Array<Person>;
-  studyProgram: Array<Pick<StudyProgram, 'id' | 'poId' | 'poNumber' | 'label'> & {
-    degreeId: string,
-    degreeLabel: string,
-    teachingUnitId: string,
-    teachingUnitLabel: string,
-    mandatory: boolean,
-    isFocus: boolean,
-    recommendedSemester: Array<number>
-  }>;
+  studyProgram: Array<
+    Pick<StudyProgram, 'id' | 'poId' | 'poNumber' | 'label'> & {
+    degreeId: string;
+    degreeLabel: string;
+    teachingUnitId: string;
+    teachingUnitLabel: string;
+    mandatory: boolean;
+    isFocus: boolean;
+    recommendedSemester: Array<number>;
+  }
+  >;
 };
 
-export type Event = {
-  label: string;
-  start: string;
-  end: string;
-};
+export type Holiday = {
+  label: string
+  date: string
+}
 
-export type HolidayEvent = Event;
-
-export type SemesterEvent = Event & {
-  context?: {
-    teachingUnit: string;
-    semesterIndex: number;
-  };
+export type SemesterPlan = {
+  id: string
+  start: string
+  end: string
+  type: { id: string, label: string },
+  semester: { id: string, index?: string, label: string }
+  teachingUnit: string
 };
