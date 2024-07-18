@@ -1,5 +1,5 @@
 import {type EventContentArg, type EventInput} from 'svelte-fullcalendar';
-import type {GlobalFilter, Holiday, Module, Person, Room, ScheduleEvent, SemesterPlan, StudyProgram} from './types';
+import type {ChoiceOption, GlobalFilter, Holiday, Module, Person, Room, ScheduleEvent, SemesterPlan, StudyProgram} from './types';
 import {_} from 'svelte-i18n';
 import {get} from "svelte/store";
 
@@ -65,20 +65,22 @@ export const buildRoomsLabel = (rooms: Array<Room>) =>
   rooms.map((room) => room.identifier).join(', ');
 
 export const buildLecturerLabel = (lecturer: Person) =>
-  `${lecturer.firstname} ${lecturer.lastname}`;
+  `${lecturer.lastname}, ${lecturer.firstname}`;
 
 export const buildLecturersLabel = (lecturers: Array<Person>) =>
-  lecturers.map(buildLecturerLabel).join(', ');
+  lecturers.map(buildLecturerLabel).join('; ');
 
 export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
-  const degreePart = studyProgram.degree ? `${studyProgram.degree.label} ` : '';
   const studyProgramLabel = studyProgram.label;
   const specializationPart = studyProgram.specialization
-    ? ` - ${studyProgram.specialization.label}`
-    : '';
-  const poPart = ` (PO${studyProgram.poNumber})`;
-  return degreePart + studyProgramLabel + specializationPart + poPart;
+  ? ` - ${studyProgram.specialization.label}`
+  : '';
+  const degreePart = studyProgram.degree ? `${studyProgram.degree.label} ` : '';
+  const poPart = `PO${studyProgram.poNumber}`;
+  return studyProgramLabel + specializationPart + ' (' + degreePart + ' ' + poPart + ')' ;
 };
+
+export const alphabeticalChoiceOptionSort = (a: ChoiceOption, b: ChoiceOption, languageCode: string  = 'de') => a.label.localeCompare(b.label, languageCode)
 
 export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): EventInput => {
   const supervisor = scheduleEvent.supervisor[0];
