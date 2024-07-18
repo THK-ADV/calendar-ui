@@ -25,6 +25,7 @@
   import type {ChoiceOption} from '$lib/types';
   import {onMount} from 'svelte';
   import {getLecturer, getModules, getRooms, getSemesters, getStudyPrograms, getTeachingUnits} from '$lib/http';
+  import {getOptionLabel, getOptionValue} from '$lib/utils';
 
   onMount(async () => {
     teachingUnits.set(await getTeachingUnits());
@@ -34,9 +35,6 @@
     lecturer.set(await getLecturer());
     rooms.set(await getRooms());
   });
-
-  const getOptionLabel = (option: ChoiceOption) =>
-    option ? option.label : '';
 
   const resetFilters = () => {
     selectedTeachingUnit.set(undefined);

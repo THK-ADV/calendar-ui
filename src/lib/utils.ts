@@ -82,6 +82,12 @@ export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
 
 export const alphabeticalChoiceOptionSort = (a: ChoiceOption, b: ChoiceOption, languageCode: string  = 'de') => a.label.localeCompare(b.label, languageCode)
 
+export const getOptionLabel = (option: ChoiceOption) =>
+  option ? option.label : '';
+
+export const getOptionValue = (option: ChoiceOption) =>
+  option ? option.value : '';
+
 export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): EventInput => {
   const supervisor = scheduleEvent.supervisor[0];
   return {
