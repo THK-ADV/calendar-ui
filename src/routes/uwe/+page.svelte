@@ -17,10 +17,9 @@
 
 <form action="">
     <MultiSelect 
-        data={$lecturerAsChoiceOptions} 
-        namePlural="Dinge" 
+        label="Lecturer"
+        data={$lecturerAsChoiceOptions}
         {getOptionLabel}
         {getOptionValue}
     ></MultiSelect>
-    {$lecturerAsChoiceOptions.length}
 </form>

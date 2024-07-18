@@ -8,49 +8,63 @@
 	import type { ChoiceOption } from '$lib/types';
     import Chip, { Set, TrailingAction, Text } from '@smui/chips';
 
-    export let data, namePlural, selected = [], getOptionLabel: (co: ChoiceOption) => string, getOptionValue: (co: ChoiceOption) => string;
+    export let label: string;
+    export let data: Array<ChoiceOption>
+    export let selected: Array<string> = []
+    export let getOptionLabel: (co: ChoiceOption) => string
+    export let getOptionValue: (co: ChoiceOption) => string
 
-    let menu,
-        searching = false,
-        textBoxValue = "",
-        visible = [];
+    let menu: MenuSurface
+    let searching = false
+    let textBoxValue = ""
+    let visible: Array<string> = []
 
-    const debounce = (cb, interval, immediate) => {
-        var timeout;
+    const debounce = (cb: ()=>void, interval: number, immediate: boolean = false) => {
+        var timeout: number | null;
 
         return function() {
-            var context = this, args = arguments;
-            var later = function() {
+            let context = this
+            let later = function() {
             timeout = null;
-            if (!immediate) cb.apply(context, args);
+            if (!immediate) cb.apply(context, []);
             };          
 
-            var callNow = immediate && !timeout;
+            let callNow = immediate && !timeout;
 
-            clearTimeout(timeout);
+            if(timeout) clearTimeout(timeout);
             timeout = setTimeout(later, interval);
 
-            if (callNow) cb.apply(context, args);
+            if (callNow) cb.apply(context, []);
         };
     }
 
-    const handleSelectAll = (e) => {
-        selected = e.target.checked ? data.map(c => c.id) : [];
+    const handleSelectAll = (e: Event) => {
+        allSelected = !allSelected
+        selected = allSelected ? data.map(c => getOptionValue(c)) : [];
     }
 
-    const handleTextChange = (e) => {
+    const handleTextChange = (e?: KeyboardEvent) => {
         // reset search when text is blank or Esc key pressed
-        if (textBoxValue === "" || e.keyCode == 27) {
+        if (textBoxValue === "" || e?.keyCode == 27) {
             textBoxValue = "";
             searching = false;
-            visible = data.map(d => d.id);
+            visible = data.map(d => getOptionValue(d));
         } else {
             searching = true;
-            visible = data.filter(d => d.name.toLowerCase().includes(textBoxValue.toLowerCase())).map(d => d.id);
+            visible = data.filter(d => getOptionLabel(d).toLowerCase().includes(textBoxValue.toLowerCase())).map(d => getOptionValue(d));
         }
     }
 
-    $: allSelected = selected.length === data.length;
+    const resetSearch = () => {
+        textBoxValue = ""
+        visible = data.map(d => getOptionValue(d));
+    }
+
+    const deselectOption = (id: string) => {
+        selected = selected.filter((item) => item != id)
+    }
+
+    $: allSelected = selected ? selected.length === data.length : false;
 
     onMount(() => {
         visible = data.map(d => getOptionValue(d));
@@ -60,7 +74,7 @@
 <div class="multi_select_menu">
     <Textfield 
         variant="outlined" 
-        label="{selected.length > 0 ? selected.length + ' ' + namePlural + ' selected' : 'Select ' + namePlural}"
+        {label}
         style="width: 100%;"
         bind:value={textBoxValue} 
         on:keydown={debounce(handleTextChange, 100)}
@@ -71,30 +85,30 @@
             on:click={() => {if(searching) {textBoxValue = ""; handleTextChange();}}}>
             {textBoxValue !== '' ? 'close' : 'search'}
         </IconButton>
-            <Set chips={[{ k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, { k: 1, v: 'Apple' }, ]} let:chip key={(chip) => chip.k} input>
-                <Chip {chip}>
-                    <Text>{chip.k}</Text>
-                    <TrailingAction icon$class="material-icons">cancel</TrailingAction>
-                </Chip>
-            </Set>
-        
     </Textfield>
+    <Set chips={data.filter((d) => selected.indexOf(getOptionValue(d)) >= 0).map((d) => ({k: getOptionLabel(d), v: getOptionValue(d)}))} let:chip input>
+        <Chip on:MDCChip:removal={() => deselectOption(chip.v)} {chip} on:remove={() => alert('Test')}>
+            <Text>{chip.k}</Text>
+            <TrailingAction icon$class="material-icons">cancel</TrailingAction>
+        </Chip>
+    </Set>
+    {selected.length}
     <MenuSurface bind:this={menu} anchorCorner="BOTTOM_LEFT">
         <List checkList>
             {#if !searching}
-                <Item>
+                <Item on:click={(e) => handleSelectAll(e)}>
                     <Label>{ allSelected === true ? "Unselect All" : "Select All" }</Label>
                     <Meta>
-                      <Checkbox bind:checked={allSelected} on:click="{handleSelectAll}" />
+                      <Checkbox bind:checked={allSelected}/>
                     </Meta>
                 </Item>
             {/if}
             {#each data as option}
                 {#if visible.includes(getOptionValue(option))}
-                    <Item>
+                    <Item on:click={() => resetSearch()}>
                       <Label>{getOptionLabel(option)}</Label>
                       <Meta>
-                        <Checkbox bind:group={selected} value={getOptionValue(option)} />
+                        <Checkbox bind:group={selected} value={getOptionValue(option)}/>
                       </Meta>
                     </Item>
                 {/if}
