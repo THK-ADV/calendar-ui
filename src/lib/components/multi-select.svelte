@@ -7,6 +7,7 @@
     import Textfield from '@smui/textfield';
 	import type { ChoiceOption } from '$lib/types';
     import Chip, { Set, TrailingAction, Text } from '@smui/chips';
+    import Accordion, { Panel, Header, Content } from '@smui-extra/accordion';
 
     export let label: string;
     export let data: Array<ChoiceOption>
@@ -79,20 +80,22 @@
         bind:value={textBoxValue} 
         on:keydown={debounce(handleTextChange, 100)}
         on:click={() => {menu.setOpen(true)}}>
-        <IconButton 
-            class="material-icons textfield-button {textBoxValue !== '' ? 'has-value' : ''}" 
-            slot="leadingIcon" 
-            on:click={() => {if(searching) {textBoxValue = ""; handleTextChange();}}}>
-            {textBoxValue !== '' ? 'close' : 'search'}
-        </IconButton>
     </Textfield>
-    <Set chips={data.filter((d) => selected.indexOf(getOptionValue(d)) >= 0).map((d) => ({k: getOptionLabel(d), v: getOptionValue(d)}))} let:chip input>
-        <Chip on:MDCChip:removal={() => deselectOption(chip.v)} {chip} on:remove={() => alert('Test')}>
-            <Text>{chip.k}</Text>
-            <TrailingAction icon$class="material-icons">cancel</TrailingAction>
-        </Chip>
-    </Set>
-    {selected.length}
+    {#if selected.length > 0}
+    <Accordion>
+        <Panel style="background-color: none;">
+            <Header>{selected.length} {label} selected</Header>
+            <Content>
+                <Set chips={data.filter((d) => selected.indexOf(getOptionValue(d)) >= 0).map((d) => ({k: getOptionLabel(d), v: getOptionValue(d)}))} let:chip input>
+                    <Chip on:MDCChip:removal={() => deselectOption(chip.v)} {chip} on:remove={() => alert('Test')} title={chip.k}>
+                        <Text>{chip.k}</Text>
+                        <TrailingAction icon$class="material-icons">cancel</TrailingAction>
+                    </Chip>
+                </Set>
+            </Content>
+        </Panel>
+    </Accordion>
+    {/if}
     <MenuSurface bind:this={menu} anchorCorner="BOTTOM_LEFT">
         <List checkList>
             {#if !searching}
@@ -105,7 +108,7 @@
             {/if}
             {#each data as option}
                 {#if visible.includes(getOptionValue(option))}
-                    <Item on:click={() => resetSearch()}>
+                    <Item on:click={() => resetSearch()} title={getOptionLabel(option)}>
                       <Label>{getOptionLabel(option)}</Label>
                       <Meta>
                         <Checkbox bind:group={selected} value={getOptionValue(option)}/>
@@ -118,18 +121,35 @@
 </div>
 
 <style>
-    .multi_select_menu {
-        margin: 15px;
-    }
     * :global(.textfield-button) {
         margin: auto 1px;
     }
-    * :global(.textfield-button:hover .mdc-icon-button__ripple::before),
-    * :global(.textfield-button:hover .mdc-icon-button__ripple::after) {
-        background: transparent;
+    
+    :global(.smui-paper.smui-paper--unelevated) {
+        background-color: transparent;
+        border: none;
     }
-    * :global(.textfield-button.has-value:hover .mdc-icon-button__ripple::before),
-    * :global(.textfield-button.has-value:hover .mdc-icon-button__ripple::after) {
-        background-color: var(--mdc-ripple-color, #000);
+
+    :global(.smui-paper.smui-paper--unelevated::before) {
+        box-shadow: none !important;
+    }
+
+    :global(.smui-paper__content) {
+        padding: 0 !important;
+    }
+
+
+    :global(.mdc-chip__text) {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        padding-top: 3px;
+        /* width: 100%;
+        overflow: scroll; */
+    }
+
+    :global(.mdc-menu-surface) {
+        width: 100%;
     }
 </style>
