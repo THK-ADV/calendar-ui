@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import Autocomplete from '@smui-extra/autocomplete';
 	import Button from '@smui/button';
 	import {
 		lecturer,
@@ -9,12 +8,12 @@
 		modulesAsChoiceOptions,
 		rooms,
 		roomsAsChoiceOptions,
-		selectedLecturer,
-		selectedModule,
-		selectedRoom,
-		selectedSemester,
-		selectedStudyProgram,
-		selectedTeachingUnit,
+		selectedLecturers,
+		selectedModules,
+		selectedRooms,
+		selectedSemesters,
+		selectedStudyPrograms,
+		selectedTeachingUnits,
 		semesters,
 		semestersAsChoiceOptions,
 		studyPrograms,
@@ -22,7 +21,6 @@
 		teachingUnits,
 		teachingUnitsAsChoiceOptions
 	} from '$lib/store';
-	import type { ChoiceOption } from '$lib/types';
 	import { onMount } from 'svelte';
 	import {
 		getLecturer,
@@ -45,73 +43,61 @@
 	});
 
 	const resetFilters = () => {
-		selectedTeachingUnit.set(undefined);
-		selectedLecturer.set(undefined);
-		selectedModule.set(undefined);
-		selectedRoom.set(undefined);
-		selectedSemester.set(undefined);
-		selectedStudyProgram.set(undefined);
+		selectedTeachingUnits.set([]);
+		selectedLecturers.set([]);
+		selectedModules.set([]);
+		selectedRooms.set([]);
+		selectedSemesters.set([]);
+		selectedStudyPrograms.set([]);
 	};
 
-  let selected:Array<string> = []
+	let selected: Array<string> = [];
 </script>
 
 <div>
 	<h1>{$_('filters')}</h1>
-	<MultiSelect label="Teaching Units" data={$teachingUnitsAsChoiceOptions} {getOptionLabel} {getOptionValue}></MultiSelect>
-	<MultiSelect label="Study Programs" data={$studyProgramsAsChoiceOptions} {getOptionLabel} {getOptionValue}></MultiSelect>
-	<MultiSelect label="Semesters" data={$semestersAsChoiceOptions} {getOptionLabel} {getOptionValue}></MultiSelect>
-	<MultiSelect label="Modules" data={$modulesAsChoiceOptions} {getOptionLabel} {getOptionValue}></MultiSelect>
-	<MultiSelect label="Lecturers" data={$lecturerAsChoiceOptions} {getOptionLabel} {getOptionValue}></MultiSelect>
-	<MultiSelect label="Rooms" data={$roomsAsChoiceOptions} {getOptionLabel} {getOptionValue} bind:selected={$selectedRoom}></MultiSelect>
-	<!-- <Autocomplete
-		options={$teachingUnitsAsChoiceOptions}
-		{getOptionLabel}
+	<MultiSelect
 		label={$_('teaching-unit')}
-		textfield$variant="outlined"
-		textfield$style="width: 100%;"
-		bind:value={$selectedTeachingUnit}
-	></Autocomplete>
-	<Autocomplete
-		options={$studyProgramsAsChoiceOptions}
+		data={$teachingUnitsAsChoiceOptions}
 		{getOptionLabel}
+		{getOptionValue}
+		bind:selected={$selectedTeachingUnits}
+	></MultiSelect>
+	<MultiSelect
 		label={$_('study-program')}
-		textfield$variant="outlined"
-		textfield$style="width: 100%;"
-		bind:value={$selectedStudyProgram}
-	></Autocomplete>
-	<Autocomplete
-		options={$semestersAsChoiceOptions}
+		data={$studyProgramsAsChoiceOptions}
 		{getOptionLabel}
+		{getOptionValue}
+		bind:selected={$selectedStudyPrograms}
+	></MultiSelect>
+	<MultiSelect
 		label={$_('semester')}
-		textfield$variant="outlined"
-		textfield$style="width: 100%;"
-		bind:value={$selectedSemester}
-	></Autocomplete>
-	<Autocomplete
-		options={$modulesAsChoiceOptions}
+		data={$semestersAsChoiceOptions}
 		{getOptionLabel}
+		{getOptionValue}
+		bind:selected={$selectedSemesters}
+	></MultiSelect>
+	<MultiSelect
 		label={$_('module')}
-		textfield$variant="outlined"
-		textfield$style="width: 100%;"
-		bind:value={$selectedModule}
-	></Autocomplete>
-	<Autocomplete
-		options={$lecturerAsChoiceOptions}
+		data={$modulesAsChoiceOptions}
 		{getOptionLabel}
+		{getOptionValue}
+		bind:selected={$selectedModules}
+	></MultiSelect>
+	<MultiSelect
 		label={$_('lecturer')}
-		textfield$variant="outlined"
-		textfield$style="width: 100%;"
-		bind:value={$selectedLecturer}
-	></Autocomplete>
-	<Autocomplete
-		options={$roomsAsChoiceOptions}
+		data={$lecturerAsChoiceOptions}
 		{getOptionLabel}
+		{getOptionValue}
+		bind:selected={$selectedLecturers}
+	></MultiSelect>
+	<MultiSelect
 		label={$_('room')}
-		textfield$variant="outlined"
-		textfield$style="width: 100%;"
-		bind:value={$selectedRoom}
-	></Autocomplete> -->
+		data={$roomsAsChoiceOptions}
+		{getOptionLabel}
+		{getOptionValue}
+		bind:selected={$selectedRooms}
+	></MultiSelect>
 	<Button variant="outlined" on:click={resetFilters}>{$_('clear-filters')}</Button>
 </div>
 

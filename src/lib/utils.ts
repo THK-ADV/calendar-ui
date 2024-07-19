@@ -1,7 +1,7 @@
-import {type EventContentArg, type EventInput} from 'svelte-fullcalendar';
-import type {ChoiceOption, GlobalFilter, Holiday, Module, Person, Room, ScheduleEvent, SemesterPlan, StudyProgram} from './types';
-import {_} from 'svelte-i18n';
-import {get} from "svelte/store";
+import { type EventContentArg, type EventInput } from 'svelte-fullcalendar';
+import type { ChoiceOption, GlobalFilter, Holiday, Module, Person, Room, ScheduleEvent, SemesterPlan, StudyProgram } from './types';
+import { _ } from 'svelte-i18n';
+import { get } from "svelte/store";
 
 export const filterScheduleEvents = (
   scheduleEvents: ScheduleEvent[],
@@ -9,34 +9,32 @@ export const filterScheduleEvents = (
 ): ScheduleEvent[] =>
   scheduleEvents.filter((event: ScheduleEvent) => {
     const matchesTeachingUnit =
-      filters.lehreinheitFilter === undefined ||
-      event.studyProgram.some(
-        ({teachingUnitId}) => teachingUnitId === filters.lehreinheitFilter?.value
-      );
+      filters.lehreinheitFilter.length === 0 ||
+      event.studyProgram.some(({ teachingUnitId }) => filters.lehreinheitFilter.some(({ value }) => value === teachingUnitId));
+
     const matchesStudyProgram =
-      filters.studyProgramFilter === undefined ||
-      event.studyProgram.some(({id}) => id === filters.studyProgramFilter?.value);
-    const matchesPo =
-      filters.poFilter === undefined ||
-      event.studyProgram.some(({poId}) => poId === filters.poFilter?.value);
+      filters.studyProgramFilter.length === 0 ||
+      event.studyProgram.some(({ id }) => filters.studyProgramFilter.some(({ value }) => value === id));
+
     const matchesSemester =
-      filters.semesterFilter === undefined ||
-      event.studyProgram.some(({recommendedSemester}) =>
-        recommendedSemester.includes(parseInt(filters.semesterFilter!.value, 10))
-      );
+      filters.semesterFilter.length === 0 ||
+      event.studyProgram.some(({ recommendedSemester }) => filters.semesterFilter.some(({ value }) => recommendedSemester.includes(parseInt(value, 10))));
+
     const matchesModule =
-      filters.moduleFilter === undefined || event.module.id === filters.moduleFilter?.value;
+      filters.moduleFilter.length === 0 ||
+      filters.moduleFilter.some(({ value }) => value === event.module.id);
+
     const matchesSupervisor =
-      filters.dozentenFilter === undefined ||
-      event.supervisor.some(({id}) => id === filters.dozentenFilter?.value);
+      filters.dozentenFilter.length === 0 ||
+      event.supervisor.some(({ id }) => filters.dozentenFilter.some(({ value }) => value === id));
+
     const matchesRoom =
-      filters.roomFilter === undefined ||
-      event.rooms.some(({id}) => id === filters.roomFilter?.value);
+      filters.roomFilter.length === 0 ||
+      event.rooms.some(({ id }) => filters.roomFilter.some(({ value }) => value === id));
 
     return (
-      matchesStudyProgram &&
       matchesTeachingUnit &&
-      matchesPo &&
+      matchesStudyProgram &&
       matchesSemester &&
       matchesModule &&
       matchesSupervisor &&
@@ -51,13 +49,13 @@ export const filterModules = (
     studyProgramFilter
   }: Pick<GlobalFilter, 'lehreinheitFilter' | 'studyProgramFilter'>
 ): Module[] =>
-  modules.filter(({studyPrograms}) => {
+  modules.filter(({ studyPrograms }) => {
     const matchesTeachingUnit =
-      lehreinheitFilter === undefined ||
-      studyPrograms.some(({teachingUnit}) => teachingUnit === lehreinheitFilter.value);
+      lehreinheitFilter.length === 0 ||
+      studyPrograms.some(({ teachingUnit }) => lehreinheitFilter.some(({ value }) => teachingUnit === value));
     const matchesStudyProgram =
-      studyProgramFilter === undefined ||
-      studyPrograms.some(({id}) => id === studyProgramFilter.value);
+      studyProgramFilter.length === 0 ||
+      studyPrograms.some(({ id }) => studyProgramFilter.some(({ value }) => value === id));
     return matchesTeachingUnit && matchesStudyProgram;
   });
 
@@ -73,14 +71,14 @@ export const buildLecturersLabel = (lecturers: Array<Person>) =>
 export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
   const studyProgramLabel = studyProgram.label;
   const specializationPart = studyProgram.specialization
-  ? ` - ${studyProgram.specialization.label}`
-  : '';
+    ? ` - ${studyProgram.specialization.label}`
+    : '';
   const degreePart = studyProgram.degree ? `${studyProgram.degree.label} ` : '';
   const poPart = `PO${studyProgram.poNumber}`;
-  return studyProgramLabel + specializationPart + ' (' + degreePart + ' ' + poPart + ')' ;
+  return studyProgramLabel + specializationPart + ' (' + degreePart + ' ' + poPart + ')';
 };
 
-export const alphabeticalChoiceOptionSort = (a: ChoiceOption, b: ChoiceOption, languageCode: string  = 'de') => a.label.localeCompare(b.label, languageCode)
+export const alphabeticalChoiceOptionSort = (a: ChoiceOption, b: ChoiceOption, languageCode: string = 'de') => a.label.localeCompare(b.label, languageCode)
 
 export const getOptionLabel = (option: ChoiceOption) =>
   option ? option.label : '';
@@ -121,7 +119,7 @@ export const holidaysToFullCalendarEvent = (holidayEvent: Holiday): EventInput =
   };
 };
 
-export const semesterPlanToFullCalendarEvent = (semesterPlan: SemesterPlan, selectedSemester?: string): EventInput => {
+export const semesterPlanToFullCalendarEvent = (semesterPlan: SemesterPlan, selectedSemester: boolean): EventInput => {
   const semesterLabel = get(_)('semester')
   const title = semesterPlan.semester.index && !selectedSemester
     ? `${semesterPlan.type.label} (${semesterLabel} ${semesterPlan.semester.index.replaceAll(',', ', ')})`

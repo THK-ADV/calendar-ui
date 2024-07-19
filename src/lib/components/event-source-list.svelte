@@ -2,11 +2,11 @@
   import {_} from 'svelte-i18n';
   import List, {Graphic, Item, Label} from '@smui/list';
   import Checkbox from '@smui/checkbox';
-  import {isHolidaysSelected, isScheduleSelected, isSemesterPlanSelected, selectedTeachingUnit} from '$lib/store';
+  import {isHolidaysSelected, isScheduleSelected, isSemesterPlanSelected, selectedTeachingUnits} from '$lib/store';
 
   let isSemesterPlanDisabled = false
-  selectedTeachingUnit.subscribe((selected) => {
-    isSemesterPlanDisabled = selected === undefined
+  selectedTeachingUnits.subscribe((selected) => {
+    isSemesterPlanDisabled = selected.length === 0
     if (isSemesterPlanDisabled) {
       $isSemesterPlanSelected = false
     }

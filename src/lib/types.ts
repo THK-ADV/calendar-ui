@@ -11,13 +11,12 @@ export type ChoiceOption = {
 };
 
 export type GlobalFilter = {
-  lehreinheitFilter?: ChoiceOption;
-  studyProgramFilter?: ChoiceOption;
-  poFilter?: ChoiceOption;
-  semesterFilter?: ChoiceOption;
-  moduleFilter?: ChoiceOption;
-  dozentenFilter?: ChoiceOption;
-  roomFilter?: ChoiceOption;
+  lehreinheitFilter: Array<ChoiceOption>;
+  studyProgramFilter: Array<ChoiceOption>;
+  semesterFilter: Array<ChoiceOption>;
+  moduleFilter: Array<ChoiceOption>;
+  dozentenFilter: Array<ChoiceOption>;
+  roomFilter: Array<ChoiceOption>;
 };
 
 // Data representation
