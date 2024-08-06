@@ -41,3 +41,13 @@
 		--accent-low-opacity: #e6007e11;
 	}
 }
+
+[data-theme="light"] {
+	--surface-0: #e5e8ed;
+	--surface-1: #f3f6fc;
+	--surface-2: #ffffff;
+	--on-surface: #3b3b3b;
+	--accent: #e6007e;
+	--accent-light: #ebbbd5;
+	--accent-low-opacity: #e6007e11;
+}
