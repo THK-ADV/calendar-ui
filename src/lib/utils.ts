@@ -1,5 +1,5 @@
 import { type EventContentArg, type EventInput } from 'svelte-fullcalendar';
-import type { ChoiceOption, GlobalFilter, Holiday, Module, Person, Room, ScheduleEvent, SemesterPlan, StudyProgram } from './types';
+import { CalendarViewTypes, type ChoiceOption, type GlobalFilter, type Holiday, type Module, type Person, type Room, type ScheduleEvent, type SemesterPlan, type StudyProgram } from './types';
 import { _ } from 'svelte-i18n';
 import { get } from "svelte/store";
 
@@ -141,7 +141,7 @@ export const scheduleEventRenderer = (arg: EventContentArg) => {
     };
   }
 
-  if (arg.view.type === 'timeGridWeek' || arg.view.type === 'timeGridDay') {
+  if (arg.view.type === CalendarViewTypes.timeGridWeekView || arg.view.type === CalendarViewTypes.timeGridDayView) {
     return {
       html: `
     <div title="${arg.event.title}" style="display: flex; flex-direction: column; height: 100%; padding: 1em; gap: 1em; overflow: hidden;">
@@ -155,7 +155,7 @@ export const scheduleEventRenderer = (arg: EventContentArg) => {
     };
   }
 
-  if (arg.view.type === 'dayGridMonth') {
+  if (arg.view.type === CalendarViewTypes.dayGridMonthView) {
     return {
       html: `
   <div title="${arg.event.title}" style="display: flex; flex-direction: row; margin: 1em; gap: 1em; overflow: hidden; width: 100%;">

@@ -20,5 +20,8 @@
 	"course-parts": {
 		"lecture": "Lecture",
 		"practical": "Practical"
-	}
+	},
+	"week": "Week",
+	"month": "Month",
+	"day": "Day"
 }

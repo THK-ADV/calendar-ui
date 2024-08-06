@@ -118,3 +118,9 @@ export type SemesterPlan = {
   semester: { id: string, index?: string, label: string }
   teachingUnit: string
 };
+
+export enum CalendarViewTypes { 
+  dayGridMonthView = 'dayGridMonthView', 
+  timeGridWeekView = 'timeGridWeekView', 
+  timeGridDayView = 'timeGridDayView' 
+}

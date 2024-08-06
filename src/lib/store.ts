@@ -156,7 +156,6 @@ export const semesterPlanEvents: Writable<Array<SemesterPlan>> = writable([]);
 const filteredScheduleEvents = derived(
   [scheduleEvents, filters, isScheduleSelected],
   ([$scheduleEvents, $filters, $selectedSchedule]) => {
-    console.log("filteredScheduleEvents")
     return $selectedSchedule
       ? filterScheduleEvents($scheduleEvents, $filters)
       : []
@@ -190,7 +189,6 @@ const filteredSemesterPlan = derived(
 export const filteredEvents = derived(
   [filteredScheduleEvents, holidayEvents, filteredSemesterPlan, selectedSemesters],
   ([$scheduleEvents, $holidayEvents, $semesterPlanEvents, $selectedSemesters]) => {
-    console.log("filteredEvents")
     return [
       ...$scheduleEvents.map(scheduleEventToFullCalendarEvent),
       ...$holidayEvents.map(holidaysToFullCalendarEvent),

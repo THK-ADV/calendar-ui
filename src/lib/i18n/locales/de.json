@@ -20,5 +20,8 @@
 	"course-parts": {
 		"lecture": "Vorlesung",
 		"practical": "Praktikum"
-	}
+	},
+	"week": "Woche",
+	"month": "Monat",
+	"day": "Tag"
 }

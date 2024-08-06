@@ -1,56 +1,64 @@
 <script lang="ts">
-  import type {CalendarOptions} from 'svelte-fullcalendar';
-  import FullCalendar from 'svelte-fullcalendar';
-  import deLocale from '@fullcalendar/core/locales/de';
-  import timeGridPlugin from '@fullcalendar/timegrid';
-  import dayGridPlugin from '@fullcalendar/daygrid';
-  import interactionPlugin from '@fullcalendar/interaction';
+	import type { CalendarOptions } from 'svelte-fullcalendar';
+	import FullCalendar from 'svelte-fullcalendar';
+	import deLocale from '@fullcalendar/core/locales/de';
+	import timeGridPlugin from '@fullcalendar/timegrid';
+	import dayGridPlugin from '@fullcalendar/daygrid';
+	import interactionPlugin from '@fullcalendar/interaction';
+	import { _ } from 'svelte-i18n';
+	import { CalendarViewTypes } from '$lib/types';
 
-  export let options: CalendarOptions;
-
-  let baseOptions: CalendarOptions = {
-    weekNumbers: true,
-    allDayText: 'All-day',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    initialView: 'timeGridWeek',
-    plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
-    height: '100%',
-    handleWindowResize: true,
-    firstDay: 1,
-    fixedWeekCount: false,
-    slotEventOverlap: false,
-    locale: deLocale,
-    slotMinTime: '07:00:00',
-    slotMaxTime: '24:00:00',
-    slotDuration: '00:15:00',
-    slotLabelInterval: {hours: 1},
-    scrollTime: '08:00:00',
-    allDaySlot: true,
-    hiddenDays: [0],
-    expandRows: true,
-    nowIndicator: true,
-    selectable: true,
-    dayMaxEvents: 5,
-    views: {
-      timeGridSixDays: {
-        type: 'timeGrid',
-        duration: {days: 6},
-        buttonText: '6 day'
-      },
-      timeGridOneDays: {
-        type: 'timeGrid',
-        duration: {days: 1},
-        buttonText: '1 day'
-      }
-    },
-    ...options
-  };
-  let calendarOptions = {...baseOptions, ...options};
-  $: calendarOptions = {...baseOptions, ...options};
+	export let options: CalendarOptions;
+	
+	let baseOptions: CalendarOptions = {
+		allDayText: 'All-day',
+		allDaySlot: true,
+		expandRows: true,
+		firstDay: 0,
+		fixedWeekCount: false,
+		handleWindowResize: true,
+		headerToolbar: {
+			left: 'prev,next today',
+			center: 'title',
+			right: `${CalendarViewTypes.dayGridMonthView},${CalendarViewTypes.timeGridWeekView},${CalendarViewTypes.timeGridDayView}`
+		},
+		height: '100%',
+		hiddenDays: [0],
+		initialView: CalendarViewTypes.timeGridWeekView,
+		locale: deLocale,
+		nowIndicator: true,
+		plugins: [timeGridPlugin, dayGridPlugin, interactionPlugin],
+		scrollTime: '08:00:00',
+		slotDuration: '00:15:00',
+		slotEventOverlap: false,
+		slotLabelInterval: { hours: 1 },
+		slotMaxTime: '24:00:00',
+		slotMinTime: '07:00:00',
+		selectable: true,
+		views: {
+			[CalendarViewTypes.dayGridMonthView]: {
+				type: 'dayGridMonth',
+				buttonText: $_("month"),
+				dayMaxEvents: 4,
+			},
+			[CalendarViewTypes.timeGridWeekView]: {
+				type: 'timeGridWeek',
+				duration: { days: 7 },
+				buttonText: $_("week"),
+				eventMaxStack: 4,
+			},
+			[CalendarViewTypes.timeGridDayView]: {
+				type: 'timeGridDay',
+				duration: { days: 1 },
+				buttonText: $_("day"),
+				eventMaxStack: 15
+			}
+		},
+		weekNumbers: true,
+		...options
+	};
+	let calendarOptions = { ...baseOptions, ...options };
+	$: calendarOptions = { ...baseOptions, ...options };
 </script>
 
-<FullCalendar style="width: 100%" options={calendarOptions}/>
+<FullCalendar style="width: 100%" options={calendarOptions} />

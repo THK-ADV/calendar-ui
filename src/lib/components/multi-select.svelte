@@ -43,11 +43,6 @@
 		};
 	}
 
-	const handleSelectAll = (e: Event) => {
-		allSelected = !allSelected;
-		selected = allSelected ? data : [];
-	};
-
 	const handleTextChange = (e?: KeyboardEvent) => {
 		// reset search when text is blank or Esc key pressed
 		if (textBoxValue === '' || e?.keyCode == 27) {
@@ -71,8 +66,6 @@
 		selected = selected.filter(({ value }) => value !== id);
 	};
 
-	$: allSelected = selected ? selected.length === data.length : false;
-
 	onMount(() => {
 		visible = data.map((d) => getOptionValue(d));
 	});
@@ -86,6 +79,7 @@
 		bind:value={textBoxValue}
 		on:keydown={debounce((args) => handleTextChange(args), 100)}
 		on:click={() => {
+			handleTextChange()
 			menu.setOpen(true);
 		}}
 	></Textfield>
@@ -102,7 +96,7 @@
 						<Chip
 							on:MDCChip:removal={() => deselectOption(chip.v)}
 							{chip}
-							on:remove={() => alert('Test')}
+							on:remove={() => alert(chip.v)}
 							title={chip.k}
 						>
 							<Text>{chip.k}</Text>
@@ -115,14 +109,6 @@
 	{/if}
 	<MenuSurface bind:this={menu} anchorCorner="BOTTOM_LEFT">
 		<List checkList>
-			{#if !searching}
-				<Item on:click={(e) => handleSelectAll(e)}>
-					<Label>{allSelected === true ? 'Unselect All' : 'Select All'}</Label>
-					<Meta>
-						<Checkbox bind:checked={allSelected} />
-					</Meta>
-				</Item>
-			{/if}
 			{#each data as option}
 				{#if visible.includes(getOptionValue(option))}
 					<Item on:click={() => resetSearch()} title={getOptionLabel(option)}>
@@ -161,8 +147,6 @@
 		text-overflow: ellipsis;
 		display: inline-block;
 		padding-top: 3px;
-		/* width: 100%;
-        overflow: scroll; */
 	}
 
 	:global(.mdc-menu-surface) {

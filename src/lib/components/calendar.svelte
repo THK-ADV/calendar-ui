@@ -7,6 +7,8 @@
 
   const dispatch = createEventDispatcher();
 
+  let calendarRef: BaseCalendar;
+
   let options: CalendarOptions = {
     events: [],
     eventContent: scheduleEventRenderer,
@@ -17,7 +19,7 @@
     },
     eventClick: (arg) => {
       selectedScheduleEventId.set(arg.event.id);
-    }
+    },
     // dateClick: (_arg) => {
     //   selectedScheduleEventId.set(undefined);
     // },
@@ -28,4 +30,4 @@
   });
 </script>
 
-<BaseCalendar {options}></BaseCalendar>
+<BaseCalendar bind:this={calendarRef} {options}></BaseCalendar>
