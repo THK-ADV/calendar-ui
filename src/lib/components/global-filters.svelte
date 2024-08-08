@@ -58,6 +58,7 @@
 	<h1>{$_('filters')}</h1>
 	<MultiSelect
 		label={$_('teaching-unit')}
+		pluralLabel={$_('teaching-units')}
 		data={$teachingUnitsAsChoiceOptions}
 		{getOptionLabel}
 		{getOptionValue}
@@ -65,6 +66,7 @@
 	></MultiSelect>
 	<MultiSelect
 		label={$_('study-program')}
+		pluralLabel={$_('study-programs')}
 		data={$studyProgramsAsChoiceOptions}
 		{getOptionLabel}
 		{getOptionValue}
@@ -72,6 +74,7 @@
 	></MultiSelect>
 	<MultiSelect
 		label={$_('semester')}
+		pluralLabel={$_('semesters')}
 		data={$semestersAsChoiceOptions}
 		{getOptionLabel}
 		{getOptionValue}
@@ -79,6 +82,7 @@
 	></MultiSelect>
 	<MultiSelect
 		label={$_('module')}
+		pluralLabel={$_('modules')}
 		data={$modulesAsChoiceOptions}
 		{getOptionLabel}
 		{getOptionValue}
@@ -86,6 +90,7 @@
 	></MultiSelect>
 	<MultiSelect
 		label={$_('lecturer')}
+		pluralLabel={$_('lecturers')}
 		data={$lecturerAsChoiceOptions}
 		{getOptionLabel}
 		{getOptionValue}
@@ -93,6 +98,7 @@
 	></MultiSelect>
 	<MultiSelect
 		label={$_('room')}
+		pluralLabel={$_('rooms')}
 		data={$roomsAsChoiceOptions}
 		{getOptionLabel}
 		{getOptionValue}

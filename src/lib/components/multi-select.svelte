@@ -8,8 +8,10 @@
 	import type { ChoiceOption } from '$lib/types';
 	import Chip, { Set, TrailingAction, Text } from '@smui/chips';
 	import Accordion, { Panel, Header, Content } from '@smui-extra/accordion';
+	import { _ } from 'svelte-i18n';
 
 	export let label: string;
+	export let pluralLabel: string;
 	export let data: Array<ChoiceOption>;
 	export let selected: Array<ChoiceOption> = [];
 	export let getOptionLabel: (co: ChoiceOption) => string;
@@ -86,7 +88,7 @@
 	{#if selected.length > 0}
 		<Accordion>
 			<Panel style="background-color: none;">
-				<Header>{selected.length} {label} selected</Header>
+				<Header>{selected.length} {selected.length === 1 ? label : pluralLabel} {$_('selected')}</Header>
 				<Content>
 					<Set
 						chips={selected.map((d) => ({ k: getOptionLabel(d), v: getOptionValue(d) }))}

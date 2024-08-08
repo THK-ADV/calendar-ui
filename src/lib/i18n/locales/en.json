@@ -1,21 +1,27 @@
 {
 	"filters": "Filters",
-	"teaching-unit": "Teachning unit",
+	"teaching-unit": "Teachning Unit",
+	"teaching-units": "Teaching Units",
 	"study-program": "Study Program",
+	"study-programs": "Study Programs",
 	"semester": "Semester",
+  "semesters": "Semesters",
 	"module": "Module",
+  "modules": "Modules",
 	"lecturer": "Lecturer",
+  "lecturers": "Lecturers",
 	"room": "Room",
-	"clear-filters": "Clear filters",
+  "rooms": "Rooms",
+	"clear-filters": "Clear Filters",
 	"schedule": "Schedule",
-	"data-sources": "Data sources",
-	"module-details": "Module details",
+	"data-sources": "Data Sources",
+	"module-details": "Module Details",
 	"data-sources-translations": {
 		"schedule": "Schedule",
 		"exams": "Exams",
 		"holidays": "Holidays",
-		"campus-events": "Campus events",
-		"semester": "Semester information"
+		"campus-events": "Campus Events",
+		"semester": "Semester Information"
 	},
 	"course-parts": {
 		"lecture": "Lecture",
@@ -23,5 +29,6 @@
 	},
 	"week": "Week",
 	"month": "Month",
-	"day": "Day"
+	"day": "Day",
+	"selected": "selected"
 }

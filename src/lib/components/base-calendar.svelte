@@ -14,7 +14,6 @@
 		allDayText: 'All-day',
 		allDaySlot: true,
 		expandRows: true,
-		firstDay: 0,
 		fixedWeekCount: false,
 		handleWindowResize: true,
 		headerToolbar: {
@@ -46,6 +45,8 @@
 				duration: { days: 7 },
 				buttonText: $_("week"),
 				eventMaxStack: 4,
+				dateAlignment: 'week',
+				moreLinkClick: () => CalendarViewTypes.timeGridDayView
 			},
 			[CalendarViewTypes.timeGridDayView]: {
 				type: 'timeGridDay',

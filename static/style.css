@@ -31,3 +31,19 @@ body {
 	flex-direction: row;
 	flex-grow: 1;
 }
+
+
+/***********************************/
+/* Specific custom design elements */
+/***********************************/
+
+/* MultiSelect-Textfield of 'Global Filters' section */
+div.multi_select_menu {
+	label.mdc-text-field--focused:not(.mdc-text-field--diabled) {
+		div.mdc-notched-outline__notch {
+			span.mdc-floating-label {
+				color: var(--th-magenta);
+			}
+		}
+	}
+}
