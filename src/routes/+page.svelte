@@ -34,10 +34,12 @@
 
 <style>
     nav {
-        min-width: 300px;
+        width: 300px;
         display: flex;
         flex-direction: column;
         border-right: 1px solid #c9c9c9;
+        overflow: scroll;
+        height: 100vh;
     }
 
     main {

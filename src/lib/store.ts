@@ -1,4 +1,4 @@
-import {derived, get, type Readable, writable, type Writable} from 'svelte/store';
+import { derived, get, type Readable, writable, type Writable } from 'svelte/store';
 import {
   type ChoiceOption,
   type DateRange,
@@ -14,6 +14,8 @@ import {
   type TeachingUnit
 } from './types';
 import {
+  alphabeticalChoiceOptionSort,
+  buildLecturerLabel,
   buildStudyProgramLabel,
   filterModules,
   filterScheduleEvents,
@@ -21,7 +23,7 @@ import {
   scheduleEventToFullCalendarEvent,
   semesterPlanToFullCalendarEvent
 } from './utils';
-import {getHolidays, getScheduleEvents, getSemesterPlan} from "$lib/http";
+import { getHolidays, getScheduleEvents, getSemesterPlan } from "$lib/http";
 
 // Reference data (soon to be) requested by API
 
@@ -35,18 +37,20 @@ export const rooms: Writable<Array<Room>> = writable([]);
 // Filter options
 
 export const teachingUnitsAsChoiceOptions = derived(teachingUnits, ($tu) =>
-  $tu.map(teachingUnitToChoiceOption)
+  $tu.map(teachingUnitToChoiceOption).sort(alphabeticalChoiceOptionSort)
 );
 
 export const semestersAsChoiceOptions = derived(semesters, ($semesters) =>
-  $semesters.map(semesterToChoiceOption)
+  $semesters.map(semesterToChoiceOption).sort(alphabeticalChoiceOptionSort)
 );
 
 export const lecturerAsChoiceOptions = derived(lecturer, ($lecturer) =>
-  $lecturer.map(personToChoiceOption)
+  $lecturer.map(personToChoiceOption).sort(alphabeticalChoiceOptionSort)
 );
 
-export const roomsAsChoiceOptions = derived(rooms, ($rooms) => $rooms.map(roomToChoiceOption));
+export const roomsAsChoiceOptions = derived(rooms, ($rooms) =>
+  $rooms.map(roomToChoiceOption).sort(alphabeticalChoiceOptionSort)
+);
 
 const teachingUnitToChoiceOption = (teachingUnit: TeachingUnit): ChoiceOption => ({
   label: teachingUnit.label,
@@ -64,7 +68,7 @@ const moduleToChoiceOption = (module: Module): ChoiceOption => ({
 });
 
 const personToChoiceOption = (person: Person): ChoiceOption => ({
-  label: `${person.firstname} ${person.lastname}`,
+  label: buildLecturerLabel(person),
   value: person.id
 });
 
@@ -73,57 +77,57 @@ const roomToChoiceOption = (room: Room): ChoiceOption => ({
   value: room.id
 });
 
-const semesterToChoiceOption = (semester: Semester) => ({
+const semesterToChoiceOption = (semester: Semester): ChoiceOption => ({
   label: `${semester.label}. Semester`,
-  value: semester.id
+  value: `${semester.id}`
 });
 
 // Filtered values
 
-export const selectedTeachingUnit: Writable<ChoiceOption | undefined> = writable();
-export const selectedStudyProgram: Writable<ChoiceOption | undefined> = writable();
-export const selectedSemester: Writable<ChoiceOption | undefined> = writable();
-export const selectedModule: Writable<ChoiceOption | undefined> = writable();
-export const selectedLecturer: Writable<ChoiceOption | undefined> = writable();
-export const selectedRoom: Writable<ChoiceOption | undefined> = writable();
+export const selectedTeachingUnits: Writable<Array<ChoiceOption>> = writable([]);
+export const selectedStudyPrograms: Writable<Array<ChoiceOption>> = writable([]);
+export const selectedSemesters: Writable<Array<ChoiceOption>> = writable([]);
+export const selectedModules: Writable<Array<ChoiceOption>> = writable([]);
+export const selectedLecturers: Writable<Array<ChoiceOption>> = writable([]);
+export const selectedRooms: Writable<Array<ChoiceOption>> = writable([]);
 
 export const studyProgramsAsChoiceOptions = derived(
-  [studyPrograms, selectedTeachingUnit],
-  ([$studyPrograms, $selectedTeachingUnit]) => {
-    const filteredStudyPrograms = $selectedTeachingUnit === undefined
-      ? $studyPrograms
-      : $studyPrograms
-        .filter(({teachingUnit}) => teachingUnit === $selectedTeachingUnit?.value)
-    return filteredStudyPrograms.map(studyProgramToChoiceOption)
+  [studyPrograms, selectedTeachingUnits],
+  ([$studyPrograms, $selectedTeachingUnits]) => {
+    const filteredStudyPrograms = 
+    $selectedTeachingUnits.length === 0 
+    ? $studyPrograms
+    : $studyPrograms.filter(({ teachingUnit }) => $selectedTeachingUnits.some(stu => stu?.value === teachingUnit))
+    return filteredStudyPrograms.map(studyProgramToChoiceOption).sort(alphabeticalChoiceOptionSort)
   }
 );
 
 export const modulesAsChoiceOptions = derived(
-  [modules, selectedTeachingUnit, selectedStudyProgram],
-  ([$modules, $selectedTeachingUnit, $selectedStudyProgram]) =>
+  [modules, selectedTeachingUnits, selectedStudyPrograms],
+  ([$modules, $selectedTeachingUnits, $selectedStudyPrograms]) =>
     filterModules($modules, {
-      lehreinheitFilter: $selectedTeachingUnit,
-      studyProgramFilter: $selectedStudyProgram
-    }).map(moduleToChoiceOption)
+      lehreinheitFilter: $selectedTeachingUnits,
+      studyProgramFilter: $selectedStudyPrograms
+    }).map(moduleToChoiceOption).sort(alphabeticalChoiceOptionSort)
 );
 
 export const filters: Readable<GlobalFilter> = derived(
   [
-    selectedTeachingUnit,
-    selectedStudyProgram,
-    selectedSemester,
-    selectedModule,
-    selectedLecturer,
-    selectedRoom
+    selectedTeachingUnits,
+    selectedStudyPrograms,
+    selectedSemesters,
+    selectedModules,
+    selectedLecturers,
+    selectedRooms
   ],
   ([
-     lehreinheitFilter,
-     studyProgramFilter,
-     semesterFilter,
-     moduleFilter,
-     dozentenFilter,
-     roomFilter
-   ]) => ({
+    lehreinheitFilter,
+    studyProgramFilter,
+    semesterFilter,
+    moduleFilter,
+    dozentenFilter,
+    roomFilter
+  ]) => ({
     lehreinheitFilter,
     studyProgramFilter,
     semesterFilter,
@@ -152,7 +156,6 @@ export const semesterPlanEvents: Writable<Array<SemesterPlan>> = writable([]);
 const filteredScheduleEvents = derived(
   [scheduleEvents, filters, isScheduleSelected],
   ([$scheduleEvents, $filters, $selectedSchedule]) => {
-    console.log("filteredScheduleEvents")
     return $selectedSchedule
       ? filterScheduleEvents($scheduleEvents, $filters)
       : []
@@ -160,18 +163,20 @@ const filteredScheduleEvents = derived(
 );
 
 const filteredSemesterPlan = derived(
-  [semesterPlanEvents, selectedTeachingUnit, selectedSemester],
-  ([semesterPlanEvents, selectedTeachingUnit, selectedSemester]) => {
-    selectedTeachingUnit ? semesterPlanEvents.filter(a => a.teachingUnit === selectedTeachingUnit.value) : []
+  [semesterPlanEvents, selectedTeachingUnits, selectedSemesters],
+  ([semesterPlanEvents, selectedTeachingUnits, selectedSemesters]) => {
+    //semesterPlanEvents.filter(a => a.teachingUnit === selectedTeachingUnit.value)
+  
     const filteredEntries: Array<SemesterPlan> = []
     for (const entry of semesterPlanEvents) {
-      if (selectedTeachingUnit && entry.teachingUnit === selectedTeachingUnit.value) {
+      if (selectedTeachingUnits.length !== 0 && selectedTeachingUnits.some(({value}) => value === entry.teachingUnit)) {
         if (!entry.semester.index) {
           filteredEntries.push(entry)
-        } else if (!selectedSemester) {
+        } else if (selectedSemesters.length === 0) {
           filteredEntries.push(entry)
         } else {
-          if (selectedSemester && entry.semester.index && entry.semester.index.includes(selectedSemester.value)) {
+          // 1,2,3
+          if (selectedSemesters.length !== 0 && entry.semester.index && selectedSemesters.some(({value}) => entry.semester.index?.includes(value))) {
             filteredEntries.push(entry)
           }
         }
@@ -182,13 +187,12 @@ const filteredSemesterPlan = derived(
 )
 
 export const filteredEvents = derived(
-  [filteredScheduleEvents, holidayEvents, filteredSemesterPlan, selectedSemester],
-  ([$scheduleEvents, $holidayEvents, $semesterPlanEvents, $selectedSemester]) => {
-    console.log("filteredEvents")
+  [filteredScheduleEvents, holidayEvents, filteredSemesterPlan, selectedSemesters],
+  ([$scheduleEvents, $holidayEvents, $semesterPlanEvents, $selectedSemesters]) => {
     return [
       ...$scheduleEvents.map(scheduleEventToFullCalendarEvent),
       ...$holidayEvents.map(holidaysToFullCalendarEvent),
-      ...$semesterPlanEvents.map(a => semesterPlanToFullCalendarEvent(a, $selectedSemester?.value)),
+      ...$semesterPlanEvents.map(a => semesterPlanToFullCalendarEvent(a, $selectedSemesters.length > 0)),
     ]
   }
 );

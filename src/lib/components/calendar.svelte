@@ -17,7 +17,7 @@
     },
     eventClick: (arg) => {
       selectedScheduleEventId.set(arg.event.id);
-    }
+    },
     // dateClick: (_arg) => {
     //   selectedScheduleEventId.set(undefined);
     // },

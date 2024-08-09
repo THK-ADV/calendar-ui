@@ -1,7 +1,7 @@
-import {type EventContentArg, type EventInput} from 'svelte-fullcalendar';
-import type {GlobalFilter, Holiday, Module, Person, Room, ScheduleEvent, SemesterPlan, StudyProgram} from './types';
-import {_} from 'svelte-i18n';
-import {get} from "svelte/store";
+import { type EventContentArg, type EventInput } from 'svelte-fullcalendar';
+import { CalendarViewTypes, type ChoiceOption, type GlobalFilter, type Holiday, type Module, type Person, type Room, type ScheduleEvent, type SemesterPlan, type StudyProgram } from './types';
+import { _ } from 'svelte-i18n';
+import { get } from "svelte/store";
 
 export const filterScheduleEvents = (
   scheduleEvents: ScheduleEvent[],
@@ -9,34 +9,32 @@ export const filterScheduleEvents = (
 ): ScheduleEvent[] =>
   scheduleEvents.filter((event: ScheduleEvent) => {
     const matchesTeachingUnit =
-      filters.lehreinheitFilter === undefined ||
-      event.studyProgram.some(
-        ({teachingUnitId}) => teachingUnitId === filters.lehreinheitFilter?.value
-      );
+      filters.lehreinheitFilter.length === 0 ||
+      event.studyProgram.some(({ teachingUnitId }) => filters.lehreinheitFilter.some(({ value }) => value === teachingUnitId));
+
     const matchesStudyProgram =
-      filters.studyProgramFilter === undefined ||
-      event.studyProgram.some(({id}) => id === filters.studyProgramFilter?.value);
-    const matchesPo =
-      filters.poFilter === undefined ||
-      event.studyProgram.some(({poId}) => poId === filters.poFilter?.value);
+      filters.studyProgramFilter.length === 0 ||
+      event.studyProgram.some(({ id }) => filters.studyProgramFilter.some(({ value }) => value === id));
+
     const matchesSemester =
-      filters.semesterFilter === undefined ||
-      event.studyProgram.some(({recommendedSemester}) =>
-        recommendedSemester.includes(parseInt(filters.semesterFilter!.value, 10))
-      );
+      filters.semesterFilter.length === 0 ||
+      event.studyProgram.some(({ recommendedSemester }) => filters.semesterFilter.some(({ value }) => recommendedSemester.includes(parseInt(value, 10))));
+
     const matchesModule =
-      filters.moduleFilter === undefined || event.module.id === filters.moduleFilter?.value;
+      filters.moduleFilter.length === 0 ||
+      filters.moduleFilter.some(({ value }) => value === event.module.id);
+
     const matchesSupervisor =
-      filters.dozentenFilter === undefined ||
-      event.supervisor.some(({id}) => id === filters.dozentenFilter?.value);
+      filters.dozentenFilter.length === 0 ||
+      event.supervisor.some(({ id }) => filters.dozentenFilter.some(({ value }) => value === id));
+
     const matchesRoom =
-      filters.roomFilter === undefined ||
-      event.rooms.some(({id}) => id === filters.roomFilter?.value);
+      filters.roomFilter.length === 0 ||
+      event.rooms.some(({ id }) => filters.roomFilter.some(({ value }) => value === id));
 
     return (
-      matchesStudyProgram &&
       matchesTeachingUnit &&
-      matchesPo &&
+      matchesStudyProgram &&
       matchesSemester &&
       matchesModule &&
       matchesSupervisor &&
@@ -51,13 +49,13 @@ export const filterModules = (
     studyProgramFilter
   }: Pick<GlobalFilter, 'lehreinheitFilter' | 'studyProgramFilter'>
 ): Module[] =>
-  modules.filter(({studyPrograms}) => {
+  modules.filter(({ studyPrograms }) => {
     const matchesTeachingUnit =
-      lehreinheitFilter === undefined ||
-      studyPrograms.some(({teachingUnit}) => teachingUnit === lehreinheitFilter.value);
+      lehreinheitFilter.length === 0 ||
+      studyPrograms.some(({ teachingUnit }) => lehreinheitFilter.some(({ value }) => teachingUnit === value));
     const matchesStudyProgram =
-      studyProgramFilter === undefined ||
-      studyPrograms.some(({id}) => id === studyProgramFilter.value);
+      studyProgramFilter.length === 0 ||
+      studyPrograms.some(({ id }) => studyProgramFilter.some(({ value }) => value === id));
     return matchesTeachingUnit && matchesStudyProgram;
   });
 
@@ -65,20 +63,28 @@ export const buildRoomsLabel = (rooms: Array<Room>) =>
   rooms.map((room) => room.identifier).join(', ');
 
 export const buildLecturerLabel = (lecturer: Person) =>
-  `${lecturer.firstname} ${lecturer.lastname}`;
+  `${lecturer.lastname}, ${lecturer.firstname}`;
 
 export const buildLecturersLabel = (lecturers: Array<Person>) =>
-  lecturers.map(buildLecturerLabel).join(', ');
+  lecturers.map(buildLecturerLabel).join('; ');
 
 export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
-  const degreePart = studyProgram.degree ? `${studyProgram.degree.label} ` : '';
   const studyProgramLabel = studyProgram.label;
   const specializationPart = studyProgram.specialization
     ? ` - ${studyProgram.specialization.label}`
     : '';
-  const poPart = ` (PO${studyProgram.poNumber})`;
-  return degreePart + studyProgramLabel + specializationPart + poPart;
+  const degreePart = studyProgram.degree ? `${studyProgram.degree.label} ` : '';
+  const poPart = `PO${studyProgram.poNumber}`;
+  return studyProgramLabel + specializationPart + ' (' + degreePart + ' ' + poPart + ')';
 };
+
+export const alphabeticalChoiceOptionSort = (a: ChoiceOption, b: ChoiceOption, languageCode: string = 'de') => a.label.localeCompare(b.label, languageCode)
+
+export const getOptionLabel = (option: ChoiceOption) =>
+  option ? option.label : '';
+
+export const getOptionValue = (option: ChoiceOption) =>
+  option ? option.value : '';
 
 export const scheduleEventToFullCalendarEvent = (scheduleEvent: ScheduleEvent): EventInput => {
   const supervisor = scheduleEvent.supervisor[0];
@@ -113,7 +119,7 @@ export const holidaysToFullCalendarEvent = (holidayEvent: Holiday): EventInput =
   };
 };
 
-export const semesterPlanToFullCalendarEvent = (semesterPlan: SemesterPlan, selectedSemester?: string): EventInput => {
+export const semesterPlanToFullCalendarEvent = (semesterPlan: SemesterPlan, selectedSemester: boolean): EventInput => {
   const semesterLabel = get(_)('semester')
   const title = semesterPlan.semester.index && !selectedSemester
     ? `${semesterPlan.type.label} (${semesterLabel} ${semesterPlan.semester.index.replaceAll(',', ', ')})`
@@ -135,7 +141,7 @@ export const scheduleEventRenderer = (arg: EventContentArg) => {
     };
   }
 
-  if (arg.view.type === 'timeGridWeek' || arg.view.type === 'timeGridDay') {
+  if (arg.view.type === CalendarViewTypes.timeGridWeekView || arg.view.type === CalendarViewTypes.timeGridDayView) {
     return {
       html: `
     <div title="${arg.event.title}" style="display: flex; flex-direction: column; height: 100%; padding: 1em; gap: 1em; overflow: hidden;">
@@ -149,7 +155,7 @@ export const scheduleEventRenderer = (arg: EventContentArg) => {
     };
   }
 
-  if (arg.view.type === 'dayGridMonth') {
+  if (arg.view.type === CalendarViewTypes.dayGridMonthView) {
     return {
       html: `
   <div title="${arg.event.title}" style="display: flex; flex-direction: row; margin: 1em; gap: 1em; overflow: hidden; width: 100%;">

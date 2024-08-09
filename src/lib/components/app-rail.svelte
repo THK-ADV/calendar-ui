@@ -22,6 +22,23 @@
 	type CopsAppRailItem = CopsAppRailLink | CopsAppRailDivider | CopsAppRailSpacer;
 
 	export let railItems: CopsAppRailItem[] = [];
+
+	let themeIcon = 'dark_mode'
+
+	const toggleTheme = () => {
+		const root = document.querySelector('body');
+		const currentTheme = root?.getAttribute('data-theme');
+		if (currentTheme === null || currentTheme === undefined || currentTheme === 'dark') {
+			root?.setAttribute('data-theme', 'light');
+			themeIcon = 'light_mode'
+		}
+
+		
+		if (currentTheme === 'light') {
+			root?.setAttribute('data-theme', 'dark');
+			themeIcon = 'dark_mode'
+		}
+	}
 </script>
 
 <div class="app-rail">
@@ -42,6 +59,12 @@
 				</li>
 			{/if}
 		{/each}
+		<li>
+			<div class="action" on:click={toggleTheme}>	
+				<Icon class="material-icons">{themeIcon}</Icon>
+				<span>Theme</span>
+			</div>
+		</li>
 	</ul>
 </div>
 
@@ -94,7 +117,7 @@
 				border-radius: 5px;
 			}
 
-			& a {
+			& a, .action {
 				color: inherit;
 				user-select: none;
 				display: flex;

@@ -1,24 +1,34 @@
 {
-	"filters": "Filter",
-	"teaching-unit": "Lehreinheit",
-	"study-program": "Studiengang",
-	"semester": "Semester",
-	"module": "Modul",
-	"lecturer": "Dozent:in",
-	"room": "Raum",
-	"clear-filters": "Filter zurücksetzen",
-	"schedule": "Stundenplan",
-	"data-sources": "Datenquellen",
-	"module-details": "Moduldetails",
-	"data-sources-translations": {
-		"schedule": "Stundenplan",
-		"exams": "Prüfungen",
-		"holidays": "Feiertage",
-		"campus-events": "Campusveranstaltungen",
-		"semester": "Semesterplan"
-	},
-	"course-parts": {
-		"lecture": "Vorlesung",
-		"practical": "Praktikum"
-	}
+  "filters": "Filter",
+  "teaching-unit": "Lehreinheit",
+  "teaching-units": "Lehreinheiten",
+  "study-program": "Studiengang",
+  "study-programs": "Studiengänge",
+  "semester": "Fachsemester",
+  "semesters": "Fachsemester",
+  "module": "Modul",
+  "modules": "Module",
+  "lecturer": "Dozent:in",
+  "lecturers": "Dozent:innen",
+  "room": "Raum",
+  "rooms": "Räume",
+  "clear-filters": "Filter zurücksetzen",
+  "schedule": "Stundenplan",
+  "data-sources": "Datenquellen",
+  "module-details": "Moduldetails",
+  "data-sources-translations": {
+    "schedule": "Stundenplan",
+    "exams": "Prüfungen",
+    "holidays": "Feiertage",
+    "campus-events": "Campusveranstaltungen",
+    "semester": "Semesterplan"
+  },
+  "course-parts": {
+    "lecture": "Vorlesung",
+    "practical": "Praktikum"
+  },
+  "week": "Woche",
+  "month": "Monat",
+  "day": "Tag",
+  "selected": "ausgewählt"
 }
