@@ -23,22 +23,21 @@
 
 	export let railItems: CopsAppRailItem[] = [];
 
-	let themeIcon = 'dark_mode'
+	let themeIcon = 'dark_mode';
 
 	const toggleTheme = () => {
 		const root = document.querySelector('body');
 		const currentTheme = root?.getAttribute('data-theme');
 		if (currentTheme === null || currentTheme === undefined || currentTheme === 'dark') {
 			root?.setAttribute('data-theme', 'light');
-			themeIcon = 'light_mode'
+			themeIcon = 'light_mode';
 		}
 
-		
 		if (currentTheme === 'light') {
 			root?.setAttribute('data-theme', 'dark');
-			themeIcon = 'dark_mode'
+			themeIcon = 'dark_mode';
 		}
-	}
+	};
 </script>
 
 <div class="app-rail">
@@ -60,7 +59,7 @@
 			{/if}
 		{/each}
 		<li>
-			<div class="action" on:click={toggleTheme}>	
+			<div class="action" on:click={toggleTheme}>
 				<Icon class="material-icons">{themeIcon}</Icon>
 				<span>Theme</span>
 			</div>
@@ -70,7 +69,7 @@
 
 <style>
 	.cops-icons {
-		fill: var(--color-on-surface);
+		fill: var(--on-surface);
 		width: 1.618em;
 	}
 
@@ -102,7 +101,7 @@
 		& li {
 			transition: all 0.1s ease-in-out;
 			&.disabled {
-				opacity: 0.3;
+				opacity: .8;
 				pointer-events: none;
 				background-color: transparent;
 			}
@@ -117,7 +116,8 @@
 				border-radius: 5px;
 			}
 
-			& a, .action {
+			& a,
+			.action {
 				color: inherit;
 				user-select: none;
 				display: flex;
@@ -139,4 +139,6 @@
 			}
 		}
 	}
+
+/* todo: fill-color for svgs a bit darker*/ 
 </style>

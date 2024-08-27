@@ -37,13 +37,73 @@ body {
 /* Specific custom design elements */
 /***********************************/
 
-/* MultiSelect-Textfield of 'Global Filters' section */
-div.multi_select_menu {
-	label.mdc-text-field--focused:not(.mdc-text-field--diabled) {
-		div.mdc-notched-outline__notch {
-			span.mdc-floating-label {
-				color: var(--th-magenta);
-			}
+* :global(.textfield-button) {
+	margin: auto 1px;
+}
+
+/***********************************/
+/* Global Filters                  */
+/***********************************/
+
+:global(.mdc-text-field--focused:not(.mdc-text-field--diabled) .mdc-notched-outline__notch) {
+	& span.mdc-floating-label {
+		color: var(--mdc-theme-primary);
+	}
+}
+
+.mdc-menu-surface {
+	width: 100%;
+}
+
+.smui-paper.smui-paper--unelevated {
+	background-color: transparent;
+	border: none;
+}
+
+.smui-paper.smui-paper--unelevated::before {
+	box-shadow: none !important;
+}
+
+div.smui-paper__content {
+	padding: 0 !important;
+}
+
+div.smui-accordion__header.mdc-ripple-surface.mdc-ripple-upgraded {
+	div.smui-accordion__header__title {
+		color: var(--on-surface);
+	}
+}
+
+div.mdc-chip-set {
+	div.chip-selected {
+		background-color: var(--surface-0) !important;
+
+		& span.mdc-chip__text {
+			max-width: 200px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: inline-block;
+			padding-top: 3px;
+		}
+	}
+
+}
+
+/***********************************/
+/* Event Sources                   */
+/***********************************/
+
+.mdc-deprecated-list-item {
+	.mdc-deprecated-list-item__text {
+		color: var(--on-surface);
+	}
+}
+
+ul.demo-list.mdc-deprecated-list {
+	& li.mdc-deprecated-list-item.mdc-deprecated-list-item--disabled {
+		.mdc-deprecated-list-item__text {
+			color: var(--mdc-theme-text-diabled-on-light);
+			opacity:.7;
 		}
 	}
 }

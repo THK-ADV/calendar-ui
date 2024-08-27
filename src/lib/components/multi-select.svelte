@@ -81,14 +81,16 @@
 		bind:value={textBoxValue}
 		on:keydown={debounce((args) => handleTextChange(args), 100)}
 		on:click={() => {
-			handleTextChange()
+			handleTextChange();
 			menu.setOpen(true);
 		}}
 	></Textfield>
 	{#if selected.length > 0}
 		<Accordion>
 			<Panel style="background-color: none;">
-				<Header>{selected.length} {selected.length === 1 ? label : pluralLabel} {$_('selected')}</Header>
+				<Header
+					>{selected.length} {selected.length === 1 ? label : pluralLabel} {$_('selected')}</Header
+				>
 				<Content>
 					<Set
 						chips={selected.map((d) => ({ k: getOptionLabel(d), v: getOptionValue(d) }))}
@@ -100,6 +102,7 @@
 							{chip}
 							on:remove={() => alert(chip.v)}
 							title={chip.k}
+							class="chip-selected"
 						>
 							<Text>{chip.k}</Text>
 							<TrailingAction icon$class="material-icons">cancel</TrailingAction>
@@ -126,32 +129,9 @@
 </div>
 
 <style>
-	* :global(.textfield-button) {
-		margin: auto 1px;
-	}
-
-	:global(.smui-paper.smui-paper--unelevated) {
-		background-color: transparent;
-		border: none;
-	}
-
-	:global(.smui-paper.smui-paper--unelevated::before) {
-		box-shadow: none !important;
-	}
-
-	:global(.smui-paper__content) {
-		padding: 0 !important;
-	}
-
-	:global(.mdc-chip__text) {
-		max-width: 200px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		display: inline-block;
-		padding-top: 3px;
-	}
-
-	:global(.mdc-menu-surface) {
-		width: 100%;
+	:global(.mdc-text-field--focused:not(.mdc-text-field--diabled) .mdc-notched-outline__notch) {
+		& span.mdc-floating-label {
+			color: var(--mdc-theme-primary);
+		}
 	}
 </style>
