@@ -1,57 +1,57 @@
 <script lang="ts">
-  import AppRail from '$lib/components/app-rail.svelte';
-  import environment from '$lib/environment';
-
-  type CopsAppRailLink = {
-    type: 'LINK';
-    text: string;
-    icon?: string;
-    image?: string;
-    url: string;
-    disabled: boolean;
-    active?: boolean;
-  };
-
-  type CopsAppRailDivider = {
-    type: 'DIVIDER';
-  };
-
-  type CopsAppRailSpacer = {
-    type: 'SPACER';
-  };
-
-  type CopsAppRailItem = CopsAppRailLink | CopsAppRailDivider | CopsAppRailSpacer;
+  import AppRail, {
+    type CopsAppRailItem
+  } from "$lib/components/app-rail.svelte"
+  import environment from "$lib/environment"
 
   const railItems: CopsAppRailItem[] = [
     {
-      type: 'LINK',
-      text: 'Modules',
-      image: '/assets/icons/modules.svg',
+      type: "LINK",
+      text: "Modules",
+      image: "/assets/icons/modules.svg",
       url: environment.modulesBaseUrl,
       disabled: false,
       active: false
     },
     {
-      type: 'LINK',
-      text: 'Calendar',
-      image: '/assets/icons/schedule.svg',
-      url: '',
+      type: "LINK",
+      text: "Calendar",
+      image: "/assets/icons/schedule.svg",
+      url: "",
       disabled: false,
       active: true
     },
-    {type: 'LINK', text: 'Rooms', image: '/assets/icons/rooms.svg', url: '', disabled: true},
-    {type: 'LINK', text: 'Exams', image: '/assets/icons/exams.svg', url: '', disabled: true},
-    {type: 'DIVIDER'},
-    {type: 'SPACER'},
-    {type: 'LINK', text: 'Feedback', icon: 'feedback', url: '#', disabled: true},
     {
-      type: 'LINK',
-      text: 'Impressum',
-      icon: 'info',
-      url: 'https://www.th-koeln.de/hochschule/impressum_8159.php',
+      type: "LINK",
+      text: "Rooms",
+      image: "/assets/icons/rooms.svg",
+      url: "",
+      disabled: true
+    },
+    {
+      type: "LINK",
+      text: "Exams",
+      image: "/assets/icons/exams.svg",
+      url: "",
+      disabled: true
+    },
+    { type: "DIVIDER" },
+    { type: "SPACER" },
+    {
+      type: "LINK",
+      text: "Feedback",
+      icon: "feedback",
+      url: "#",
+      disabled: true
+    },
+    {
+      type: "LINK",
+      text: "Impressum",
+      icon: "info",
+      url: "https://www.th-koeln.de/hochschule/impressum_8159.php",
       disabled: false
     }
-  ];
+  ]
 </script>
 
 <AppRail {railItems}></AppRail>
