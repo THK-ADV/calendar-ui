@@ -1,32 +1,56 @@
-<script context="module" lang="ts">
-  export type CopsAppRailLink = {
-    type: "LINK"
-    text: string
-    icon?: string
-    image?: string
-    url: string
-    disabled: boolean
-    active?: boolean
-  }
-
-  export type CopsAppRailDivider = {
-    type: "DIVIDER"
-  }
-
-  export type CopsAppRailSpacer = {
-    type: "SPACER"
-  }
-
-  export type CopsAppRailItem =
-    | CopsAppRailLink
-    | CopsAppRailDivider
-    | CopsAppRailSpacer
-</script>
-
 <script lang="ts">
   import { Icon } from "@smui/common"
+  import type { CopsAppRailItem } from "$lib/types"
+  import environment from "$lib/environment"
 
-  export let railItems: CopsAppRailItem[] = []
+  const railItems: CopsAppRailItem[] = [
+    {
+      type: "LINK",
+      text: "Modules",
+      image: "/assets/icons/modules.svg",
+      url: environment.modulesBaseUrl,
+      disabled: false,
+      active: false
+    },
+    {
+      type: "LINK",
+      text: "Calendar",
+      image: "/assets/icons/schedule.svg",
+      url: "",
+      disabled: false,
+      active: true
+    },
+    {
+      type: "LINK",
+      text: "Rooms",
+      image: "/assets/icons/rooms.svg",
+      url: "",
+      disabled: true
+    },
+    {
+      type: "LINK",
+      text: "Exams",
+      image: "/assets/icons/exams.svg",
+      url: "",
+      disabled: true
+    },
+    { type: "DIVIDER" },
+    { type: "SPACER" },
+    {
+      type: "LINK",
+      text: "Feedback",
+      icon: "feedback",
+      url: "#",
+      disabled: true
+    },
+    {
+      type: "LINK",
+      text: "Impressum",
+      icon: "info",
+      url: "https://www.th-koeln.de/hochschule/impressum_8159.php",
+      disabled: false
+    }
+  ]
 </script>
 
 <div class="app-rail">

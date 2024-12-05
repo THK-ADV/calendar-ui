@@ -1,5 +1,28 @@
 // To be defined
 
+export type CopsAppRailLink = {
+  type: "LINK"
+  text: string
+  icon?: string
+  image?: string
+  url: string
+  disabled: boolean
+  active?: boolean
+}
+
+export type CopsAppRailDivider = {
+  type: "DIVIDER"
+}
+
+export type CopsAppRailSpacer = {
+  type: "SPACER"
+}
+
+export type CopsAppRailItem =
+  | CopsAppRailLink
+  | CopsAppRailDivider
+  | CopsAppRailSpacer
+
 export type DateRange = {
   from: string
   to: string

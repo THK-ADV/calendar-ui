@@ -1,8 +1,6 @@
-import { type EventContentArg, type EventInput } from "svelte-fullcalendar"
+import { type EventInput } from "svelte-fullcalendar"
 import type {
-  GlobalFilter,
   Holiday,
-  Module,
   Person,
   Room,
   ScheduleEvent,
@@ -12,82 +10,21 @@ import type {
 import { _ } from "svelte-i18n"
 import { get } from "svelte/store"
 
-export const filterScheduleEvents = (
-  scheduleEvents: ScheduleEvent[],
-  filters: GlobalFilter
-): ScheduleEvent[] =>
-  scheduleEvents.filter((event: ScheduleEvent) => {
-    const matchesTeachingUnit =
-      filters.lehreinheitFilter === undefined ||
-      event.studyProgram.some(
-        ({ teachingUnitId }) =>
-          teachingUnitId === filters.lehreinheitFilter?.value
-      )
-    const matchesStudyProgram =
-      filters.studyProgramFilter === undefined ||
-      event.studyProgram.some(
-        ({ id }) => id === filters.studyProgramFilter?.value
-      )
-    const matchesPo =
-      filters.poFilter === undefined ||
-      event.studyProgram.some(({ poId }) => poId === filters.poFilter?.value)
-    const matchesSemester =
-      filters.semesterFilter === undefined ||
-      event.studyProgram.some(({ recommendedSemester }) =>
-        recommendedSemester.includes(
-          parseInt(filters.semesterFilter!.value, 10)
-        )
-      )
-    const matchesModule =
-      filters.moduleFilter === undefined ||
-      event.module.id === filters.moduleFilter?.value
-    const matchesSupervisor =
-      filters.dozentenFilter === undefined ||
-      event.supervisor.some(({ id }) => id === filters.dozentenFilter?.value)
-    const matchesRoom =
-      filters.roomFilter === undefined ||
-      event.rooms.some(({ id }) => id === filters.roomFilter?.value)
+export type EventType = "schedule" | "semesterPlan" | "holiday"
 
-    return (
-      matchesStudyProgram &&
-      matchesTeachingUnit &&
-      matchesPo &&
-      matchesSemester &&
-      matchesModule &&
-      matchesSupervisor &&
-      matchesRoom
-    )
-  })
+export function buildRoomsLabel(rooms: Array<Room>): string {
+  return rooms.map((room) => room.identifier).join(", ")
+}
 
-export const filterModules = (
-  modules: Module[],
-  {
-    lehreinheitFilter,
-    studyProgramFilter
-  }: Pick<GlobalFilter, "lehreinheitFilter" | "studyProgramFilter">
-): Module[] =>
-  modules.filter(({ studyPrograms }) => {
-    const matchesTeachingUnit =
-      lehreinheitFilter === undefined ||
-      studyPrograms.some(
-        ({ teachingUnit }) => teachingUnit === lehreinheitFilter.value
-      )
-    const matchesStudyProgram =
-      studyProgramFilter === undefined ||
-      studyPrograms.some(({ id }) => id === studyProgramFilter.value)
-    return matchesTeachingUnit && matchesStudyProgram
-  })
+export function buildLecturerLabel(lecturer: Person): string {
+  return `${lecturer.firstname} ${lecturer.lastname}`
+}
 
-export const buildRoomsLabel = (rooms: Array<Room>) =>
-  rooms.map((room) => room.identifier).join(", ")
+export function buildLecturersLabel(lecturers: Array<Person>): string {
+  return lecturers.map(buildLecturerLabel).join(", ")
+}
 
-export const buildLecturerLabel = (lecturer: Person) =>
-  `${lecturer.firstname} ${lecturer.lastname}`
-
-export const buildLecturersLabel = (lecturers: Array<Person>) =>
-  lecturers.map(buildLecturerLabel).join(", ")
-
-export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
+export function buildStudyProgramLabel(studyProgram: StudyProgram): string {
   const degreePart = studyProgram.degree ? `${studyProgram.degree.label} ` : ""
   const studyProgramLabel = studyProgram.label
   const specializationPart = studyProgram.specialization
@@ -97,9 +34,9 @@ export const buildStudyProgramLabel = (studyProgram: StudyProgram) => {
   return degreePart + studyProgramLabel + specializationPart + poPart
 }
 
-export const scheduleEventToFullCalendarEvent = (
+export function scheduleEventToFullCalendarEvent(
   scheduleEvent: ScheduleEvent
-): EventInput => {
+): EventInput {
   const supervisor = scheduleEvent.supervisor[0]
   return {
     id: scheduleEvent.id,
@@ -107,7 +44,8 @@ export const scheduleEventToFullCalendarEvent = (
     start: scheduleEvent.start,
     end: scheduleEvent.end,
     extendedProps: {
-      type: scheduleEvent.courseLabel[0],
+      type: "schedule",
+      courseType: scheduleEvent.courseLabel[0],
       abbrev: scheduleEvent.module.abbrev,
       lecturer: {
         name: `${supervisor.firstname} ${supervisor.lastname}`,
@@ -121,23 +59,23 @@ export const scheduleEventToFullCalendarEvent = (
   }
 }
 
-export const holidaysToFullCalendarEvent = (
-  holidayEvent: Holiday
-): EventInput => {
+export function holidaysToFullCalendarEvent(holidayEvent: Holiday): EventInput {
   return {
     id: holidayEvent.label + holidayEvent.date,
     title: holidayEvent.label,
     start: holidayEvent.date,
     allDay: true,
     backgroundColor: "#FF55AA",
-    display: "background"
+    extendedProps: {
+      type: "holiday"
+    }
   }
 }
 
-export const semesterPlanToFullCalendarEvent = (
+export function semesterPlanToFullCalendarEvent(
   semesterPlan: SemesterPlan,
   selectedSemester?: string
-): EventInput => {
+): EventInput {
   const semesterLabel = get(_)("semester")
   const title =
     semesterPlan.semester.index && !selectedSemester
@@ -149,43 +87,9 @@ export const semesterPlanToFullCalendarEvent = (
     start: semesterPlan.start,
     end: semesterPlan.end,
     allDay: true,
-    backgroundColor: "#FFCCAA"
-  }
-}
-
-export const scheduleEventRenderer = (arg: EventContentArg) => {
-  if (arg.event.allDay) {
-    return {
-      html: `<div title="${arg.event.title}" style="display: flex; flex-direction: column; margin: 1em; gap: 1em; overflow: hidden;">${arg.event.title}</div>`
+    backgroundColor: "#FFCCAA",
+    extendedProps: {
+      type: "semesterPlan"
     }
   }
-
-  if (arg.view.type === "timeGridWeek" || arg.view.type === "timeGridDay") {
-    return {
-      html: `
-    <div title="${arg.event.title}" style="display: flex; flex-direction: column; height: 100%; padding: 1em; gap: 1em; overflow: hidden;">
-      <span style="font-weight: 600; display: flex; align-items: center; flex-direction: row; gap: .5em;"><img title="${arg.event.extendedProps.lecturer?.name}" style="height: 20px; width: 20px; border-radius: 300px;" src="${arg.event.extendedProps.lecturer?.img ? arg.event.extendedProps.lecturer?.img : ""}" alt="lecturer">${arg.event.extendedProps.abbrev} (${arg.event.extendedProps.type})</span>
-      <div style="display: flex; flex-direction: column;">
-        <span style="display: flex; flex-direction: row; align-items: center; gap: .5em;"><span class="material-icons" style="font-size: 1.5em;">room</span>${arg.event.extendedProps.location?.identifier}</span>
-        <span style="display: flex; flex-direction: row; align-items: start; gap: .5em;"><span class="material-icons" style="font-size: 1.5em;">person</span>${arg.event.extendedProps.lecturer?.name}</span>
-      </div>
-    </div>
-  `
-    }
-  }
-
-  if (arg.view.type === "dayGridMonth") {
-    return {
-      html: `
-  <div title="${arg.event.title}" style="display: flex; flex-direction: row; margin: 1em; gap: 1em; overflow: hidden; width: 100%;">
-    <img style="height: 20px; border-radius: 300px;" src="${arg.event.extendedProps.lecturer?.img ? arg.event.extendedProps.lecturer?.img : ""}" alt="lecturer">
-    <span style="font-weight: 600; display: flex; align-items: center; flex-direction: row; gap: .5em;">${arg.event.extendedProps.abbrev} (${arg.event.extendedProps.type})</span>
-    <span style="flex-grow: 1; display: flex; align-items: center; justify-content: center;"><hr style="width: 100%; background-color: #00000022; border: none; height: 1px;"></span>
-    <span style="display: flex; flex-direction: row; align-items: center; gap: .5em;"><span class="material-icons" style="font-size: 1.8em;">room</span>${arg.event.extendedProps.location?.identifier}</span>
-  </div>
-  `
-    }
-  }
-
-  return ""
 }

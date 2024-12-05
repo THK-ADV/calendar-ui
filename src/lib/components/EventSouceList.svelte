@@ -2,39 +2,32 @@
   import { _ } from "svelte-i18n"
   import List, { Graphic, Item, Label } from "@smui/list"
   import Checkbox from "@smui/checkbox"
-  import {
-    isHolidaysSelected,
-    isScheduleSelected,
-    isSemesterPlanSelected,
-    selectedTeachingUnit
-  } from "$lib/store"
+  import { eventSourceList, filter } from "$lib/store.svelte"
 
-  let isSemesterPlanDisabled = false
-  selectedTeachingUnit.subscribe((selected) => {
-    isSemesterPlanDisabled = selected === undefined
+  let isSemesterPlanDisabled = $derived(
+    filter.selectedTeachingUnit === undefined
+  )
+
+  $effect(() => {
     if (isSemesterPlanDisabled) {
-      $isSemesterPlanSelected = false
+      eventSourceList.isSemesterPlanSelected = false
     }
   })
 </script>
 
 <div>
   <h1>{$_("data-sources")}</h1>
-  <List class="demo-list" checkList>
+  <List checkList>
     <Item>
       <Graphic>
-        <Checkbox
-          bind:checked={$isScheduleSelected}
-          value={isScheduleSelected}
-        />
+        <Checkbox bind:checked={eventSourceList.isScheduleSelected} />
       </Graphic>
       <Label>{$_("data-sources-translations.schedule")}</Label>
     </Item>
     <Item disabled={isSemesterPlanDisabled}>
       <Graphic>
         <Checkbox
-          bind:checked={$isSemesterPlanSelected}
-          value={isSemesterPlanSelected}
+          bind:checked={eventSourceList.isSemesterPlanSelected}
           disabled={isSemesterPlanDisabled}
         />
       </Graphic>
@@ -42,10 +35,7 @@
     </Item>
     <Item>
       <Graphic>
-        <Checkbox
-          bind:checked={$isHolidaysSelected}
-          value={isHolidaysSelected}
-        />
+        <Checkbox bind:checked={eventSourceList.isHolidaysSelected} />
       </Graphic>
       <Label>{$_("data-sources-translations.holidays")}</Label>
     </Item>

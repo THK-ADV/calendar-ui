@@ -1,10 +1,10 @@
-import { semesters } from "./filter-options"
 import type {
   Holiday,
   Module,
   Person,
   Room,
   ScheduleEvent,
+  Semester,
   SemesterPlan,
   StudyProgram,
   TeachingUnit
@@ -35,8 +35,17 @@ export async function getStudyPrograms() {
   return data
 }
 
-export async function getSemesters() {
-  return semesters
+export async function getSemesters(): Promise<Semester[]> {
+  return [
+    { label: "1", id: 1 },
+    { label: "2", id: 2 },
+    { label: "3", id: 3 },
+    { label: "4", id: 4 },
+    { label: "5", id: 5 },
+    { label: "6", id: 6 },
+    { label: "7", id: 7 },
+    { label: "8", id: 8 }
+  ]
 }
 
 export async function getModules() {
@@ -60,19 +69,19 @@ export async function getRooms() {
   return data
 }
 
-export async function getHolidays(from?: string, to?: string) {
-  const baseUrl = `${environment.scheduleBaseUrl}/holidays`
-  const fromPart = from ? `?from=${from}` : ""
-  const toPart = to ? `&to=${to}` : ""
-  const requestUrl = baseUrl + fromPart + toPart
-  const response = await fetch(requestUrl)
+export async function getHolidays(from: string, to: string) {
+  const url = `${environment.scheduleBaseUrl}/holidays?from=${from}&to=${to}`
+  const response = await fetch(url)
   const data: Array<Holiday> = await response.json()
   return data
 }
 
-export async function getSemesterPlan(today: string) {
-  const requestUrl = `${environment.scheduleBaseUrl}/semesterPlan?today=${today}`
+export async function getSemesterPlan(
+  from: string,
+  to: string
+): Promise<SemesterPlan> {
+  const requestUrl = `${environment.scheduleBaseUrl}/semesterPlan?from=${from}&to=${to}`
   const response = await fetch(requestUrl)
-  const data: Array<SemesterPlan> = await response.json()
-  return data
+  const data: string = await response.json()
+  return JSON.parse(data)
 }

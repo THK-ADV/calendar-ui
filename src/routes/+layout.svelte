@@ -1,14 +1,20 @@
 <script lang="ts">
   import "$lib/i18n"
-  import ThKoelnBar from "$lib/components/th-koeln-bar.svelte"
-  import CopsAppRail from "$lib/components/cops-app-rail.svelte"
+  import ThKoelnBar from "$lib/components/ThKoelnBar.svelte"
+  import AppRail from "$lib/components/AppRail.svelte"
+
+  interface Props {
+    children?: import("svelte").Snippet
+  }
+
+  let { children }: Props = $props()
 </script>
 
 <div class="app">
   <ThKoelnBar></ThKoelnBar>
   <div class="h-layout">
-    <CopsAppRail></CopsAppRail>
-    <slot></slot>
+    <AppRail />
+    {@render children?.()}
   </div>
 </div>
 

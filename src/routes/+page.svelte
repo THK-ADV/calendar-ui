@@ -1,35 +1,20 @@
 <script lang="ts">
-  import EventSourceList from "$lib/components/event-source-list.svelte"
-  import Calendar from "$lib/components/calendar.svelte"
-  import GlobalFilters from "$lib/components/global-filters.svelte"
-  import ScheduleEventDetails from "$lib/components/schedule-event-details.svelte"
-  import { selectedScheduleEvent, selectedScheduleEventId } from "$lib/store"
-
-  let open = false
-
-  selectedScheduleEventId.subscribe((id) => {
-    open = id !== undefined
-  })
-
-  const deselectScheduleEvent = () => {
-    selectedScheduleEventId.set(undefined)
-  }
+  import EventSourceList from "$lib/components/EventSouceList.svelte"
+  import ScheduleEventDetails from "$lib/components/ScheduleEventDetails.svelte"
+  import Calendar from "$lib/components/Calendar.svelte"
+  import GlobalFilter from "$lib/components/GlobalFilter.svelte"
 </script>
 
 <div class="h-layout">
   <nav>
-    <GlobalFilters></GlobalFilters>
-    <EventSourceList></EventSourceList>
+    <GlobalFilter />
+    <EventSourceList />
     <div style="flex-grow: 1"></div>
   </nav>
   <main>
-    <Calendar></Calendar>
+    <Calendar />
   </main>
-  <ScheduleEventDetails
-    {open}
-    scheduleEvent={$selectedScheduleEvent}
-    on:closed={deselectScheduleEvent}
-  ></ScheduleEventDetails>
+  <ScheduleEventDetails />
 </div>
 
 <style>
