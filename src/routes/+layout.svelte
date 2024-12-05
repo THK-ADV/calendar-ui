@@ -1,28 +1,27 @@
 <script lang="ts">
-	import '$lib/i18n';
-	import ThKoelnBar from '$lib/components/th-koeln-bar.svelte';
-	import CopsAppRail from '$lib/components/cops-app-rail.svelte';
-	import { browser } from '$app/environment';
-	import { locale, waitLocale } from 'svelte-i18n';
+  import "$lib/i18n"
+  import ThKoelnBar from "$lib/components/ThKoelnBar.svelte"
+  import AppRail from "$lib/components/AppRail.svelte"
 
-	export const load = async () => {
-	  if (browser) locale.set(window.navigator.language);
-	  await waitLocale();
-	};
+  interface Props {
+    children?: import("svelte").Snippet
+  }
+
+  let { children }: Props = $props()
 </script>
 
 <div class="app">
-	<ThKoelnBar></ThKoelnBar>
-	<div class="h-layout">
-		<CopsAppRail></CopsAppRail>
-		<slot></slot>
-	</div>
+  <ThKoelnBar></ThKoelnBar>
+  <div class="h-layout">
+    <AppRail />
+    {@render children?.()}
+  </div>
 </div>
 
 <style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		height: 100vh;
-	}
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
 </style>
